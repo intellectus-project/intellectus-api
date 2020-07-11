@@ -1,6 +1,6 @@
 # Getting Started
 
-### Creating Intellectus Database and user and granting permissions
+### Creating Intellectus Database and user with granted permissions
 
 1- install postgresql server locally\
 2- enter postgresql command line: ```sudo -i -u postgres```\
