@@ -12,10 +12,10 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./log/riskAssesment.log</file>
+        <file>./log/intellectus.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>./log/riskAssesment.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>./log/intellectus.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 30 days' worth of history capped at 3GB total size -->
             <maxHistory>30</maxHistory>
@@ -39,7 +39,7 @@
 
 
 
-    <logger name="com.atixlabs" level="DEBUG" />
+    <logger name="com.intellectus" level="DEBUG" />
     <logger name="org.apache" level="ERROR" />
     <logger name="org.springframework" level="ERROR" />
     <logger name="org.hibernate.type" level="WARN" />

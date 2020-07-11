@@ -8,12 +8,12 @@
 		<version>2.2.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.atixlabs</groupId>
+	<groupId>com.intellectus</groupId>
 	<artifactId>project-id</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
-	<name>Project Name</name>
-	<description>Atix project template for Spring Boot</description>
+	<name>Intellectus</name>
+	<description>Intellectus backend</description>
 
 	<properties>
 		<java.version>1.8</java.version>
