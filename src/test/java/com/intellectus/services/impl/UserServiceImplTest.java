@@ -48,7 +48,7 @@ class UserServiceImplTest {
         long userId = 10;
         User user = new User(10L, "oldName", "oldSurname", "oldUsername", "", Role.builder().code(com.intellectus.model.constants.Role.ROLE_ADMIN.role()).id(1).build());
         Mockito.when(repository.findById(userId)).thenReturn(Optional.of(user));
-        User userExpected = new User(10L, "newName", "newSurname", "newUsername@atixlabs.com", "", Role.builder().code(com.intellectus.model.constants.Role.ROLE_ANALYST.role()).build());
+        User userExpected = new User(10L, "newName", "newSurname", "newUsername@atixlabs.com", "", Role.builder().code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role()).build());
         userExpected.setPhone("1140515445");
         userExpected.setEmail("newUsername@atixlabs.com");
         Optional<User> retrievedUser = Optional.empty();

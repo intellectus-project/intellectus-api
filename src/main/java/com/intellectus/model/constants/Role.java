@@ -2,8 +2,8 @@ package com.intellectus.model.constants;
 
 public enum Role {
     ROLE_ADMIN("ROLE_ADMIN"),
-    ROLE_ANALYST("ROLE_ANALYST"),
-    ROLE_VIEWER("ROLE_VIEWER");
+    ROLE_SUPERVISOR("ROLE_SUPERVISOR"),
+    ROLE_OPERATOR("ROLE_OPERATOR");
 
     private String role;
 
