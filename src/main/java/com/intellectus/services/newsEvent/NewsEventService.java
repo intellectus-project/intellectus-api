@@ -1,28 +1,21 @@
 package com.intellectus.services.newsEvent;
 
-import com.google.gson.JsonObject;
 import com.intellectus.model.NewsEvent;
-import com.intellectus.model.Weather;
 import com.intellectus.repositories.NewsEventRepository;
-import com.intellectus.repositories.WeatherRepository;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManagerFactory;
 import java.util.concurrent.TimeUnit;
 
-import static org.springframework.data.repository.init.ResourceReader.Type.JSON;
-
 @Service
+@Slf4j
 public class NewsEventService {
 
     @Value("${newsEvent.baseUrl}")
@@ -30,19 +23,18 @@ public class NewsEventService {
 
     @Value("${newsEvent.apiKey}")
     private String API_KEY;
-
-    private static final Integer BUENOS_AIRES_ID = 3433955;
-
-    @Autowired
-    NewsEventRepository newsEventRepository;
-
-    @Autowired
-    EntityManagerFactory entityManagerFactory;
+    
+    private NewsEventRepository newsEventRepository;
 
     private final OkHttpClient client = new OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .build();
+
+    @Autowired
+    public NewsEventService(NewsEventRepository newsEventRepository) {
+        this.newsEventRepository = newsEventRepository;
+    }
 
     public void fetch() {
         try {
@@ -56,7 +48,7 @@ public class NewsEventService {
             JSONObject jsonResponse = new JSONObject(jsonData);
             process(jsonResponse.getJSONArray("articles"));
         } catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getStackTrace().toString());
         }
     }
 
@@ -65,18 +57,16 @@ public class NewsEventService {
             for (int i=0; i < jsonResponse.length(); i++) {
                 JSONObject news = jsonResponse.getJSONObject(i);
                 String url = news.getString("url");
-                SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-                Session sess = sessionFactory.openSession();
-                boolean exists = sess.createQuery("from NewsEvent where url = '" + url + "'")
-                                     .uniqueResult() != null;
-                if (exists) return;
-                NewsEvent newsEvent = new NewsEvent(news.getString("title"),
-                                                    news.getString("description"),
-                                                    url);
-                newsEventRepository.save(newsEvent);
+                boolean toSave = newsEventRepository.findByUrl(url).isEmpty();
+                if (toSave) {
+                    NewsEvent newsEvent = new NewsEvent(news.getString("title"),
+                            news.getString("description"),
+                            url);
+                    newsEventRepository.save(newsEvent);
+                }
             }
         } catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getStackTrace().toString());
         }
     }
 }
