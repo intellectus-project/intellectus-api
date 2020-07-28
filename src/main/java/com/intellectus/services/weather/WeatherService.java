@@ -2,6 +2,7 @@ package com.intellectus.services.weather;
 
 import com.intellectus.model.Weather;
 import com.intellectus.repositories.WeatherRepository;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class WeatherService {
 
     @Value("${openWeather.baseUrl}")
@@ -44,18 +46,18 @@ public class WeatherService {
             JSONObject jsonResponse = new JSONObject(jsonData);
             save(jsonResponse);
         } catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getStackTrace().toString());
         }
     }
 
-    public void save(JSONObject jsonResponse){
+    private void save(JSONObject jsonResponse){
         try {
             Double temp = kelvinToCelsius(jsonResponse.getJSONObject("main").getDouble("temp"));
             String description = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("description");
             Weather weather = new Weather(description, temp);
             weatherRepository.save(weather);
         } catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getStackTrace().toString());
         }
     }
 

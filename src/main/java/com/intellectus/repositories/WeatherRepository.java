@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface WeatherRepository extends CrudRepository<Weather, Integer> {
+public interface WeatherRepository extends CrudRepository<Weather, Long> {
 }
 
