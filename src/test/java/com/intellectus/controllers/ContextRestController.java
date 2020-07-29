@@ -36,11 +36,11 @@ public abstract class ContextRestController {
     UserRepository repository;
 
     protected LoginRequest adminLogin() {
-        return LoginRequest.builder().username("admin@atixlabs.com").password("admin").build();
+        return LoginRequest.builder().username("admin@intellectus.com").password("admin").build();
     }
 
     protected LoginRequest viewerLogin() {
-        return LoginRequest.builder().username("viewer@atixlabs.com").password("viewer").build();
+        return LoginRequest.builder().username("supervisor@intellectus.com").password("supervisor").build();
     }
 
     protected String login(LoginRequest logging) {
@@ -66,8 +66,8 @@ public abstract class ContextRestController {
     public void beforeLoggin() throws ExistUserException {
         repository.deleteAll();
         UserEditRequest userResponse = new UserEditRequest();
-        userResponse.setUsername("admin@atixlabs.com");
-        userResponse.setEmail("admin@atixlabs.com");
+        userResponse.setUsername("admin@intellectus.com");
+        userResponse.setEmail("admin@intellectus.com");
         userResponse.setPassword("admin");
         userResponse.setNewPassword("admin");
         userResponse.setConfirmNewPassword("admin");
@@ -77,14 +77,14 @@ public abstract class ContextRestController {
         userService.createOrEdit(userResponse);
 
         userResponse = new UserEditRequest();
-        userResponse.setUsername("viewer@atixlabs.com");
-        userResponse.setEmail("viewer@atixlabs.com");
-        userResponse.setPassword("viewer");
-        userResponse.setNewPassword("viewer");
-        userResponse.setConfirmNewPassword("viewer");
-        userResponse.setRole(Role.ROLE_VIEWER.role());
-        userResponse.setName("Viewer");
-        userResponse.setLastName("Viewer");
+        userResponse.setUsername("supervisor@intellectus.com");
+        userResponse.setEmail("supervisor@intellectus.com");
+        userResponse.setPassword("supervisor");
+        userResponse.setNewPassword("supervisor");
+        userResponse.setConfirmNewPassword("supervisor");
+        userResponse.setRole(Role.ROLE_SUPERVISOR.role());
+        userResponse.setName("Supervisor");
+        userResponse.setLastName("Supervisor");
         userService.createOrEdit(userResponse);
     }
 

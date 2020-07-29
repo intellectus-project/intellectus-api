@@ -54,30 +54,6 @@ public class DBInitializer implements CommandLineRunner {
                     .uri("/login")
                     .type("GET")
                     .build());
-            /*Menu mModifyUser = menuRepository.save(Menu.builder().name("Modificar Usuario")
-                    .code("MODIFY_USER")
-                    .icon("user")
-                    .parent(mMainUser)
-                    .uri("/user-information")
-                    .type("POST")
-                    .build());
-            Menu mListUsers = menuRepository.save(Menu.builder().name("Usuarios")
-                    .code("LIST_USER")
-                    .icon("user")
-                    .parent(mMainUser)
-                    .uri("/users")
-                    .type("GET")
-                    .build());*/
-            Menu mReports = menuRepository.save(Menu.builder().name("Reports")
-                    .code("REPORTS")
-                    .icon("area-chart")
-                    .order(0)
-                    .build());
-            Menu mKnowledge = menuRepository.save(Menu.builder().name("Knowledge")
-                    .code("KNOWLEDGE")
-                    .icon("bulb")
-                    .order(1)
-                    .build());
 
             Menu mManageUsers = menuRepository.save(Menu.builder().name("Manage Users")
                     .code("MANAGE_USERS")
@@ -87,13 +63,6 @@ public class DBInitializer implements CommandLineRunner {
                     .type("GET")
                     .build());
 
-            Menu mUploadReport = menuRepository.save(Menu.builder().name("Upload Report")
-                    .code("UPLOAD_REPORT")
-                    .icon("setting")
-                    .order(0)
-                    .uri("/upload-report")
-                    .type("GET")
-                    .build());
 
             Permission pViewProfile = permissionRepository.save(Permission.builder()
                     .code("VIEW_PROFILE")
@@ -118,28 +87,28 @@ public class DBInitializer implements CommandLineRunner {
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
                     .description("Administrator")
-                    .menus(Sets.newHashSet(mMainUser, mKnowledge,mUploadReport, mManageUsers, mReports, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mViewUser, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
-            Role roleViewer = roleRepository.save(Role.builder()
-                    .code(com.intellectus.model.constants.Role.ROLE_VIEWER.role())
+            Role roleOperator = roleRepository.save(Role.builder()
+                    .code(com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
                     .description("Viewer")
-                    .menus(Sets.newHashSet(mMainUser, mKnowledge, mReports, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mViewUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
 
-            Role roleAnalyst = roleRepository.save(Role.builder()
-                    .code(com.intellectus.model.constants.Role.ROLE_ANALYST.role())
+            Role roleSupervisor = roleRepository.save(Role.builder()
+                    .code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role())
                     .description("Analyst")
-                    .menus(Sets.newHashSet(mMainUser, mKnowledge, mUploadReport, mReports, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mViewUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
         }
 
-        if (!userService.findByUsername("admin@atixlabs.com").isPresent()) {
+        if (!userService.findByUsername("admin@intellectus.com").isPresent()) {
             UserEditRequest userResponse = new UserEditRequest();
-            userResponse.setUsername("admin@atixlabs.com");
-            userResponse.setEmail("admin@atixlabs.com");
+            userResponse.setUsername("admin@intellectus.com");
+            userResponse.setEmail("admin@intellectus.com");
             userResponse.setPassword("admin");
             userResponse.setNewPassword("admin");
             userResponse.setConfirmNewPassword("admin");
@@ -148,18 +117,32 @@ public class DBInitializer implements CommandLineRunner {
             userResponse.setLastName("Admin");
             userService.createOrEdit(userResponse);
         }
-        if (!userService.findByUsername("viewer@atixlabs.com").isPresent()) {
+        if (!userService.findByUsername("supervisor@intellectus.com").isPresent()) {
             UserEditRequest userResponse = new UserEditRequest();
-            userResponse.setUsername("viewer@atixlabs.com");
-            userResponse.setEmail("viewer@atixlabs.com");
-            userResponse.setPassword("viewer");
-            userResponse.setNewPassword("viewer");
-            userResponse.setConfirmNewPassword("viewer");
-            userResponse.setRole(com.intellectus.model.constants.Role.ROLE_VIEWER.role());
-            userResponse.setName("Viewer");
-            userResponse.setLastName("Viewer");
+            userResponse.setUsername("supervisor@intellectus.com");
+            userResponse.setEmail("supervisor@intellectus.com");
+            userResponse.setPassword("supervisor");
+            userResponse.setNewPassword("supervisor");
+            userResponse.setConfirmNewPassword("supervisor");
+            userResponse.setRole(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role());
+            userResponse.setName("Supervisor");
+            userResponse.setLastName("Supervisor");
             userService.createOrEdit(userResponse);
         }
+
+        if (!userService.findByUsername("operator@intellectus.com").isPresent()) {
+            UserEditRequest userResponse = new UserEditRequest();
+            userResponse.setUsername("operator@intellectus.com");
+            userResponse.setEmail("operator@intellectus.com");
+            userResponse.setPassword("operator");
+            userResponse.setNewPassword("operator");
+            userResponse.setConfirmNewPassword("operator");
+            userResponse.setRole(com.intellectus.model.constants.Role.ROLE_OPERATOR.role());
+            userResponse.setName("Operator");
+            userResponse.setLastName("Operator");
+            userService.createOrEdit(userResponse);
+        }
+
         Optional<Menu> menu = menuRepository.findByCode("USERS");
         if (menu.isPresent() && menu.get().getName().contains("Profile")) {
             menu.get().setName("My account");

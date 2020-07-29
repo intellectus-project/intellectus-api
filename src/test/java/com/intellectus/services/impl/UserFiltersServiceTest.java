@@ -36,13 +36,13 @@ public class UserFiltersServiceTest {
     @BeforeEach
     public void returnAllUsers() {
         repository1.deleteAll();
-        Role roleAnalyst = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_ANALYST.role());
-        Role roleViewer = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_VIEWER.role());
-        User user1 = new User(123L, "Test1Name", "Lastname1", "test1", "", roleAnalyst);
+        Role roleSupervisor = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role());
+        Role roleOperator = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_OPERATOR.role());
+        User user1 = new User(123L, "Test1Name", "Lastname1", "test1", "", roleSupervisor);
         user1.setActive(false);
-        User user2 = new User(124L, "Test2Name", "Lastname2", "test2", "", roleViewer);
-        User user3 = new User(125L, "Test3Name", "Lastname3", "test3", "", roleAnalyst);
-        User user4 = new User(126L, "Test4Name", "Lastname4", "test4", "", roleViewer);
+        User user2 = new User(124L, "Test2Name", "Lastname2", "test2", "", roleSupervisor);
+        User user3 = new User(125L, "Test3Name", "Lastname3", "test3", "", roleOperator);
+        User user4 = new User(126L, "Test4Name", "Lastname4", "test4", "", roleSupervisor);
         List<User> userList = Lists.newArrayList(user1, user2, user3, user4);
         repository1.saveAll(userList);
     }
