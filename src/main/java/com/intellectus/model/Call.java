@@ -17,7 +17,6 @@ public class Call extends AuditableEntity{
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    private long duration;
     private String clientName;
 
     @JoinColumn(name = "ID_USER")
