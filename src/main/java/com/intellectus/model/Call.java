@@ -30,6 +30,11 @@ public class Call extends AuditableEntity{
 
     public Call() {}
 
+    public Call(User user, LocalDateTime startTime) {
+        this.user = user;
+        this.startTime = startTime;
+    }
+
     public Call(User user, LocalDateTime startTime, LocalDateTime endTime, String emotion) {
         this.user = user;
         this.startTime = startTime;

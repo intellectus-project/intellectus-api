@@ -4,15 +4,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
-public class CallDto {
-    private LocalDateTime startTime;
+public class CallRequestPutDto {
+    @NotNull
     private LocalDateTime endTime;
+    @NotNull
     private String emotion;
-    private StatDto consultant;
-    private StatDto operator;
+    @NotNull
+    private StatDto consultantStats;
+    @NotNull
+    private StatDto operatorStats;
 }
