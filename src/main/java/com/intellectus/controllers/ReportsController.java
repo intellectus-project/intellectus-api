@@ -26,7 +26,7 @@ public class ReportsController {
 
     private CallService callService;
 
-    @GetMapping
+    @GetMapping("/ringsChart")
     public ResponseEntity<RingsChartDto> getRingsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo)
     {

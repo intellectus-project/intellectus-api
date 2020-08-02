@@ -11,4 +11,5 @@ public class RingsChartDto {
     private double fear;
     private double neutrality;
     private double anger;
+    private long numberOfStats;
 }

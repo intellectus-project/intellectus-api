@@ -7,6 +7,7 @@ import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Permission;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.*;
 import com.google.common.collect.Sets;
@@ -166,17 +167,5 @@ public class DBInitializer implements CommandLineRunner {
             menu.get().setIcon("user");
             menuRepository.save(menu.get());
         }
-
-        User user = userService.findById(1l);
-        Call call1 = new Call(user, LocalDateTime.now(), LocalDateTime.now().plusDays(1), "happiness");
-        Call call2 = new Call(user, LocalDateTime.now(), LocalDateTime.now().plusDays(1), "fear");
-        callRepository.saveAll(Arrays.asList(call1, call2));
-
-        Stat stat = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call1, SpeakerType.SPEAKER_TYPE_CONSULTANT.getSpeakerType());
-        Stat stat1 = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call1, SpeakerType.SPEAKER_TYPE_OPERATOR.getSpeakerType());
-        Stat stat2 = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call2, SpeakerType.SPEAKER_TYPE_CONSULTANT.getSpeakerType());
-        Stat stat3 = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call2, SpeakerType.SPEAKER_TYPE_OPERATOR.getSpeakerType());
-        statRepository.saveAll(Arrays.asList(stat, stat1, stat2, stat3));
-
     }
 }
