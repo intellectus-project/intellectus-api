@@ -1,8 +1,5 @@
 package com.intellectus.model.constants;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum Emotion {
     EMOTION_SADNESS("EMOTION_SADNESS"),
     EMOTION_HAPPINESS("EMOTION_HAPPINESS"),
