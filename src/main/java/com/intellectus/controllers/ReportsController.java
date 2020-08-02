@@ -1,15 +1,16 @@
 package com.intellectus.controllers;
 
 
-import com.google.common.collect.Lists;
 import com.intellectus.controllers.model.RingsChartDto;
-import com.intellectus.model.configuration.Role;
+import com.intellectus.services.CallService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.time.LocalDate;
+
 
 @RestController
 @Slf4j
@@ -18,10 +19,18 @@ import java.util.Collection;
 public class ReportsController {
     public static final String URL_MAPPING_REPORTS = "/reports";
 
-    @GetMapping
-    public ResponseEntity<RingsChartDto> getRingsChart()
-    {
-        RingsChartDto ringsChartDto = RingsChartDto.builder().build();
-        return ResponseEntity.ok().body(ringsChartDto);
+    @Autowired
+    public ReportsController(CallService callService){
+        this.callService = callService;
     }
+
+    private CallService callService;
+
+    @GetMapping
+    public ResponseEntity<RingsChartDto> getRingsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo)
+    {
+        return ResponseEntity.ok().body(callService.getRingsChart(dateFrom, dateTo));
+    }
+
 }
