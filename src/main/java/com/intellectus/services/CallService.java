@@ -31,26 +31,31 @@ public class CallService {
 
     private CallRepository callRepository;
     private StatService statService;
+    private static final String happinessEnum = Emotion.EMOTION_HAPPINESS.getEmotion();
+    private static final String fearEnum = Emotion.EMOTION_FEAR.getEmotion();
+    private static final String angerEnum = Emotion.EMOTION_ANGER.getEmotion();
+    private static final String neutralityEnum = Emotion.EMOTION_NEUTRALITY.getEmotion();
+    private static final String sadnessEnum = Emotion.EMOTION_SADNESS.getEmotion();
 
     public RingsChartDto getRingsChart(LocalDate dateFrom, LocalDate dateTo){
         List<Stat> stats = statService.getStatsBetweenDates(dateFrom, dateTo);
         Map<String, Double> emotionMap = new HashMap<>();
 
         stats.forEach(stat -> {
-            emotionMap.put(Emotion.EMOTION_HAPPINESS.getEmotion(), emotionMap.get(Emotion.EMOTION_HAPPINESS.getEmotion()) + stat.getHappiness());
-            emotionMap.put(Emotion.EMOTION_FEAR.getEmotion(), emotionMap.get(Emotion.EMOTION_FEAR.getEmotion()) + stat.getFear());
-            emotionMap.put(Emotion.EMOTION_ANGER.getEmotion(), emotionMap.get(Emotion.EMOTION_ANGER.getEmotion()) + stat.getAnger());
-            emotionMap.put(Emotion.EMOTION_NEUTRALITY.getEmotion(), emotionMap.get(Emotion.EMOTION_NEUTRALITY.getEmotion()) + stat.getNeutrality());
-            emotionMap.put(Emotion.EMOTION_SADNESS.getEmotion(), emotionMap.get(Emotion.EMOTION_SADNESS.getEmotion()) + stat.getSadness());
+            emotionMap.put(happinessEnum, emotionMap.get(happinessEnum)  == null ? 0.0 + stat.getHappiness() : emotionMap.get(happinessEnum) + stat.getHappiness());
+            emotionMap.put(fearEnum, emotionMap.get(fearEnum) == null ? 0.0 + stat.getFear() : emotionMap.get(fearEnum) + stat.getFear() );
+            emotionMap.put(angerEnum, emotionMap.get(angerEnum) == null ? 0.0 + stat.getAnger() : emotionMap.get(angerEnum) + stat.getAnger());
+            emotionMap.put(neutralityEnum, emotionMap.get(neutralityEnum) == null ? 0.0 + stat.getNeutrality() : emotionMap.get(neutralityEnum) + stat.getNeutrality());
+            emotionMap.put(sadnessEnum, emotionMap.get(sadnessEnum) == null ? 0.0 + stat.getSadness() : emotionMap.get(sadnessEnum) + stat.getSadness());
         });
 
         int numberOfRecords = stats.size();
 
-        double happinessAvg = emotionMap.get(Emotion.EMOTION_HAPPINESS.getEmotion()) / numberOfRecords;
-        double fearAvg = emotionMap.get(Emotion.EMOTION_FEAR.getEmotion())  / numberOfRecords;
-        double angryAvg = emotionMap.get(Emotion.EMOTION_ANGER.getEmotion()) / numberOfRecords;
-        double neutralityAvg = emotionMap.get(Emotion.EMOTION_NEUTRALITY.getEmotion()) / numberOfRecords;
-        double sadnessAvg = emotionMap.get(Emotion.EMOTION_SADNESS.getEmotion()) / numberOfRecords;
+        double happinessAvg = emotionMap.get(happinessEnum) / numberOfRecords;
+        double fearAvg = emotionMap.get(fearEnum)  / numberOfRecords;
+        double angryAvg = emotionMap.get(angerEnum) / numberOfRecords;
+        double neutralityAvg = emotionMap.get(neutralityEnum) / numberOfRecords;
+        double sadnessAvg = emotionMap.get(sadnessEnum) / numberOfRecords;
 
         return RingsChartDto.builder()
                 .anger(angryAvg)
@@ -58,6 +63,7 @@ public class CallService {
                 .happiness(happinessAvg)
                 .neutrality(neutralityAvg)
                 .sadness(sadnessAvg)
+                .numberOfStats(numberOfRecords)
                 .build();
     }
 
