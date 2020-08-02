@@ -25,7 +25,6 @@ public class Call extends AuditableEntity{
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-
     private String emotion;
 
     public Call() {}

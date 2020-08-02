@@ -1,9 +1,13 @@
 package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.UserEditRequest;
+import com.intellectus.model.Call;
+import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Permission;
 import com.intellectus.model.configuration.Role;
+import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.*;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -29,8 +35,15 @@ public class DBInitializer implements CommandLineRunner {
     @Autowired
     private MenuRepository menuRepository;
 
+    @Autowired
+    private StatRepository statRepository;
+
+    @Autowired
+    private CallRepository callRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
         if (roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_ADMIN.role()) == null) {
             menuRepository.deleteAll();
             Menu mMainUser = menuRepository.save(Menu.builder().name("Profile")
@@ -153,5 +166,17 @@ public class DBInitializer implements CommandLineRunner {
             menu.get().setIcon("user");
             menuRepository.save(menu.get());
         }
+
+        User user = userService.findById(1l);
+        Call call1 = new Call("Admin", user, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+        Call call2 = new Call("Admin", user, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+        callRepository.saveAll(Arrays.asList(call1, call2));
+
+        Stat stat = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call1, SpeakerType.SPEAKER_TYPE_CONSULTANT.getSpeakerType());
+        Stat stat1 = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call1, SpeakerType.SPEAKER_TYPE_OPERATOR.getSpeakerType());
+        Stat stat2 = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call2, SpeakerType.SPEAKER_TYPE_CONSULTANT.getSpeakerType());
+        Stat stat3 = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call2, SpeakerType.SPEAKER_TYPE_OPERATOR.getSpeakerType());
+        statRepository.saveAll(Arrays.asList(stat, stat1, stat2, stat3));
+
     }
 }
