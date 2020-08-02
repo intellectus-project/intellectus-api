@@ -33,12 +33,17 @@ public class DBInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_ADMIN.role()) == null) {
             menuRepository.deleteAll();
-            Menu mMainUser = menuRepository.save(Menu.builder().name("Profile")
+            Menu mViewDashboard = menuRepository.save(Menu.builder().name("Dashboard")
+                    .code("VIEW_DASHBOARD")
+                    .icon("bar-chart")
+                    .order(4)
+                    .build());
+            Menu mMainUser = menuRepository.save(Menu.builder().name("Perfil")
                     .code("USERS")
                     .icon("user")
                     .order(3)
                     .build());
-            Menu mViewUser = menuRepository.save(Menu.builder().name("View Profile")
+            Menu mViewUser = menuRepository.save(Menu.builder().name("Ver Perfil")
                     .code("VIEW_PROFILE")
                     //.icon("user")
                     .parent(mMainUser)
@@ -55,7 +60,7 @@ public class DBInitializer implements CommandLineRunner {
                     .type("GET")
                     .build());
 
-            Menu mManageUsers = menuRepository.save(Menu.builder().name("Manage Users")
+            Menu mManageUsers = menuRepository.save(Menu.builder().name("Usuarios")
                     .code("MANAGE_USERS")
                     .icon("setting")
                     .order(2)
@@ -87,7 +92,7 @@ public class DBInitializer implements CommandLineRunner {
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
                     .description("Administrator")
-                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mViewDashboard, mMainUser, mManageUsers, mViewUser, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
             Role roleOperator = roleRepository.save(Role.builder()
