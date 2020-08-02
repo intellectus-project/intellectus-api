@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface StatRepository extends CrudRepository<Stat, Long> {
-    @Query("from Stat inner join Call on Stat.call = Call where Call.startTime  >=  :dateFrom and Call.endTime <= dateTo")
-    List<Stat> findStatsFromCallsBetweenDate(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
+    //@Query("from Stat inner join Call on Stat.call = Call where Call.startTime  >=  :dateFrom and Call.endTime <= :dateTo")
+    //List<Stat> findStatsFromCallsBetweenDate(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
 }
 

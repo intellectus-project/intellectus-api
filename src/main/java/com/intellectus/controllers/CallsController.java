@@ -5,7 +5,7 @@ import com.intellectus.controllers.model.CallRequestPatchDto;
 import com.intellectus.controllers.model.CallResponseDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.security.UserPrincipal;
-import com.intellectus.services.call.CallService;
+import com.intellectus.services.CallService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

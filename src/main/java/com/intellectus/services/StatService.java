@@ -20,7 +20,11 @@ public class StatService {
     private StatRepository statRepository;
 
     public List<Stat> getStatsBetweenDates(LocalDate dateFrom, LocalDate dateTo){
-        return statRepository.findStatsFromCallsBetweenDate(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+      //  return statRepository.findStatsFromCallsBetweenDate(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+return null;
+    }
 
+    public void create(Stat stat) {
+        statRepository.save(stat);
     }
 }
