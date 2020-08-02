@@ -1,6 +1,9 @@
 package com.intellectus.controllers;
 
+import com.google.common.collect.Collections2;
+import com.intellectus.controllers.model.CallResponseDto;
 import com.intellectus.controllers.model.MenuDto;
+import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.controllers.model.UserEditRequest;
 import com.intellectus.exceptions.ExistUserException;
 import com.intellectus.exceptions.PasswordNotMatchException;
@@ -31,6 +34,7 @@ import javax.validation.constraints.Min;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @RestController
 @Slf4j
@@ -166,5 +170,13 @@ public class UsersController {
     public User getProfile(@AuthenticationPrincipal UserPrincipal usuarioActual) {
         return repository.findById(usuarioActual.getId())
                 .orElseThrow(() -> new RuntimeException());
+    }
+
+    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
+    @GetMapping("/operators/{id}")
+    public ResponseEntity<?> getOperatorsBySupervisor(@AuthenticationPrincipal UserPrincipal user)
+    {
+        Collection<OperatorDto> operators = service.getOperatorsWithInfoBySupervisor(user.getId());
+        return ResponseEntity.ok().body(operators);
     }
 }

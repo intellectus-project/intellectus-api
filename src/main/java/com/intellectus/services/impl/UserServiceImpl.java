@@ -7,6 +7,8 @@ import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
+import com.intellectus.services.CallService;
+import com.intellectus.services.StatService;
 import com.intellectus.services.filters.FilterUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
@@ -42,6 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    CallService callService;
+
+    @Autowired
+    StatService statService;
 
     @Override
     public Collection<User> findAll() {
@@ -275,6 +283,23 @@ public class UserServiceImpl implements UserService {
             }
         }
         return navbar;
+    }
+
+    public Collection<User> getOperatorsBySupervisor(Long supervisorId) {
+        return repository.findOperatorsBySupervisorId(supervisorId);
+    }
+
+    public Collection<OperatorDto> getOperatorsWithInfoBySupervisor(Long supervisorId) {
+        Collection<User> users = getOperatorsBySupervisor(supervisorId);
+        List<OperatorDto> operators = new ArrayList<>();
+        users.forEach(user -> {
+            OperatorDto dto = new OperatorDto(user.getId(),
+                                              user.getUsername(),
+                                              callService.actualOperatorCall(user) != null ? callService.actualOperatorCall(user).getStartTime() : null,
+                                              statService.lastOperatorStat(user).getPrimaryEmotion());
+            operators.add(dto);
+        });
+        return operators;
     }
 
 }

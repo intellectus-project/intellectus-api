@@ -103,4 +103,8 @@ public class CallService {
                 SpeakerType.SPEAKER_TYPE_OPERATOR.getSpeakerType());
         statService.create(operatorStats);
     }
+
+    public Call actualOperatorCall(User operator) {
+        return callRepository.findActualByOperator(operator.getId());
+    }
 }

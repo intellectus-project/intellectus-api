@@ -1,7 +1,9 @@
 package com.intellectus.model.configuration;
 
+import com.google.common.collect.Sets;
 import com.intellectus.model.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.intellectus.model.Call;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Objects;
 
 @Getter
@@ -52,6 +55,13 @@ public class User extends AuditableEntity {
     @NotNull(message = "Active cannot be null")
     @Column(name = "ACTIVE")
     private boolean active;
+
+    @JoinColumn(name = "ID_SUPERVISOR")
+    @ManyToOne
+    private User supervisor;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Call> calls = Sets.newHashSet();
 
     public User() {
         this.active = true;
