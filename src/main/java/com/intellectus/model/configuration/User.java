@@ -57,6 +57,8 @@ public class User extends AuditableEntity {
         this.active = true;
     }
 
+    public User(Long id) { this.id = id; }
+
     public User(Long id, String name, String lastName, String username, String password, Role role) {
         this.id = id;
         this.name = name;

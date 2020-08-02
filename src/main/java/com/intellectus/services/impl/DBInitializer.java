@@ -1,9 +1,14 @@
 package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.UserEditRequest;
+import com.intellectus.model.Call;
+import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Permission;
 import com.intellectus.model.configuration.Role;
+import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Emotion;
+import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.*;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -29,8 +36,15 @@ public class DBInitializer implements CommandLineRunner {
     @Autowired
     private MenuRepository menuRepository;
 
+    @Autowired
+    private StatRepository statRepository;
+
+    @Autowired
+    private CallRepository callRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
         if (roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_ADMIN.role()) == null) {
             menuRepository.deleteAll();
             Menu mMainUser = menuRepository.save(Menu.builder().name("Profile")

@@ -20,9 +20,24 @@ public class Call extends AuditableEntity{
     private String clientName;
 
     @JoinColumn(name = "ID_USER")
-    @OneToOne
+    @ManyToOne
     private User user;
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String emotion;
+
+    public Call() {}
+
+    public Call(User user, LocalDateTime startTime) {
+        this.user = user;
+        this.startTime = startTime;
+    }
+
+    public Call(User user, LocalDateTime startTime, LocalDateTime endTime, String emotion) {
+        this.user = user;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.emotion = emotion;
+    }
 }
