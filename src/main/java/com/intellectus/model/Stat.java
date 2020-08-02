@@ -27,9 +27,8 @@ public class Stat {
 
     private String speakerType;
 
-    protected Stat(){
-        //required by hib
-    }
+    public Stat() {}
+
     public Stat(double sadness, double happiness, double fear, double neutrality, double anger, Call call, String speakerType){
         this.sadness = sadness;
         this.happiness = happiness;
@@ -39,6 +38,4 @@ public class Stat {
         this.call = call;
         this.speakerType = speakerType;
     }
-
-
 }

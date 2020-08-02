@@ -12,6 +12,7 @@ import com.intellectus.services.filters.FilterUserDto;
 import com.intellectus.services.impl.UserService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -25,15 +25,19 @@ public class Call extends AuditableEntity{
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String emotion;
 
-    protected Call(){
-        //required by hibernate
-    }
+    public Call() {}
 
-    public Call(String clientName, User user, LocalDateTime startTime, LocalDateTime endTime){
-        this.clientName = clientName;
+    public Call(User user, LocalDateTime startTime) {
         this.user = user;
         this.startTime = startTime;
-        this.endTime = startTime;
+    }
+
+    public Call(User user, LocalDateTime startTime, LocalDateTime endTime, String emotion) {
+        this.user = user;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.emotion = emotion;
     }
 }
