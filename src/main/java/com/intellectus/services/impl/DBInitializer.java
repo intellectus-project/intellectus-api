@@ -7,6 +7,7 @@ import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Permission;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.*;
 import com.google.common.collect.Sets;
@@ -168,8 +169,8 @@ public class DBInitializer implements CommandLineRunner {
         }
 
         User user = userService.findById(1l);
-        Call call1 = new Call("Admin", user, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
-        Call call2 = new Call("Admin", user, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+        Call call1 = new Call(user, LocalDateTime.now(), LocalDateTime.now().plusDays(1), Emotion.EMOTION_ANGER.getEmotion());
+        Call call2 = new Call(user, LocalDateTime.now(), LocalDateTime.now().plusDays(1), Emotion.EMOTION_HAPPINESS.getEmotion());
         callRepository.saveAll(Arrays.asList(call1, call2));
 
         Stat stat = new Stat(1.0, 1.1, 1.2, 1.3, 1.4, call1, SpeakerType.SPEAKER_TYPE_CONSULTANT.getSpeakerType());

@@ -8,6 +8,7 @@ import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.CallRepository;
+import com.intellectus.repositories.StatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
