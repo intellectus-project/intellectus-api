@@ -1,7 +1,7 @@
 package com.intellectus.controllers;
 
 import com.intellectus.controllers.model.CallRequestPostDto;
-import com.intellectus.controllers.model.CallRequestPutDto;
+import com.intellectus.controllers.model.CallRequestPatchDto;
 import com.intellectus.controllers.model.CallResponseDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.security.UserPrincipal;
@@ -19,7 +19,7 @@ import javax.validation.constraints.Min;
 @RestController
 @Slf4j
 @RequestMapping(CallsController.URL_MAPPING_CALLS)
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.PUT})
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.PATCH})
 public class CallsController {
 
     public static final String URL_MAPPING_CALLS = "/calls";
@@ -44,8 +44,8 @@ public class CallsController {
     }
 
     @PreAuthorize("hasRole('ROLE_OPERATOR')")
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(@RequestBody @Valid CallRequestPutDto call, @PathVariable @Min(1) Long id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> update(@RequestBody @Valid CallRequestPatchDto call, @PathVariable @Min(1) Long id) {
         try {
             callService.update(call, id);
             return ResponseEntity.ok().body("updated");

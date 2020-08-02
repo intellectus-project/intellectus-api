@@ -1,7 +1,7 @@
 package com.intellectus.services.call;
 
 import com.intellectus.controllers.model.CallRequestPostDto;
-import com.intellectus.controllers.model.CallRequestPutDto;
+import com.intellectus.controllers.model.CallRequestPatchDto;
 import com.intellectus.controllers.model.StatDto;
 import com.intellectus.model.Call;
 import com.intellectus.model.Stat;
@@ -31,7 +31,7 @@ public class CallService {
         return call.getId();
     }
 
-    public void update(CallRequestPutDto callDto, Long id) throws Exception{
+    public void update(CallRequestPatchDto callDto, Long id) throws Exception{
         Optional<Call> optionalCall = callRepository.findById((id));
         if(optionalCall.isEmpty())
             throw new Exception("Call does not exist");
