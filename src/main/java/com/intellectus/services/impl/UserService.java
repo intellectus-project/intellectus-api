@@ -1,6 +1,7 @@
 package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.MenuDto;
+import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.controllers.model.UserEditRequest;
 import com.intellectus.exceptions.ExistUserException;
 import com.intellectus.exceptions.InactiveUserException;
@@ -10,10 +11,7 @@ import com.intellectus.services.filters.FilterUserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public interface UserService {
 
@@ -40,5 +38,9 @@ public interface UserService {
     Collection<User> findAll(FilterUserDto filter);
 
     Page<User> findUsersFilteredAndPaginated(FilterUserDto filter, Pageable page);
+
+    Collection<User> getOperatorsBySupervisor(Long supervisorId);
+
+    Collection<OperatorDto> getOperatorsWithInfoBySupervisor(Long supervisorId);
 
 }

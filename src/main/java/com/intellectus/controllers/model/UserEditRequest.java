@@ -1,6 +1,7 @@
 package com.intellectus.controllers.model;
 
 import com.intellectus.model.annotations.ValidPassword;
+import com.intellectus.model.configuration.User;
 import lombok.Getter;
 import lombok.Setter;
 import java.io.Serializable;
@@ -22,5 +23,6 @@ public class UserEditRequest implements Serializable {
     private String role;
     private String type;
     private String selectedKey;
+    private User supervisor;
 
 }
