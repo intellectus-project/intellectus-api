@@ -1,5 +1,6 @@
 package com.intellectus.model;
 
+import com.intellectus.model.constants.SpeakerType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,8 @@ public class Stat {
     @ManyToOne
     private Call calls;
 
-    private String speakerType;
+    @Enumerated(EnumType.STRING)
+    private SpeakerType speakerType;
 
 
 }
