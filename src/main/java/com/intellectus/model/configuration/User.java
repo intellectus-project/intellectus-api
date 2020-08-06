@@ -1,7 +1,10 @@
 package com.intellectus.model.configuration;
 
+import com.google.common.collect.Sets;
+import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.model.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.intellectus.model.Call;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 
 @Getter
@@ -53,6 +58,13 @@ public class User extends AuditableEntity {
     @Column(name = "ACTIVE")
     private boolean active;
 
+    @JoinColumn(name = "ID_SUPERVISOR")
+    @ManyToOne
+    private User supervisor;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Call> calls = Sets.newHashSet();
+
     public User() {
         this.active = true;
     }
@@ -92,5 +104,15 @@ public class User extends AuditableEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, lastName, email, phone, username, password, role, active);
+    }
+
+    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, String emotion){
+        return OperatorDto.builder()
+                .id(this.id)
+                .username(this.username)
+                .inCall(lastCallStartTime != null)
+                .callStartTime(lastCallStartTime)
+                .actualEmotion(emotion)
+                .build();
     }
 }

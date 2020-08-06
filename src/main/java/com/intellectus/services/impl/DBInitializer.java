@@ -159,6 +159,7 @@ public class DBInitializer implements CommandLineRunner {
             userResponse.setRole(com.intellectus.model.constants.Role.ROLE_OPERATOR.role());
             userResponse.setName("Operator");
             userResponse.setLastName("Operator");
+            userResponse.setSupervisor(userService.findByUsername("supervisor@intellectus.com").get());
             userService.createOrEdit(userResponse);
         }
 
