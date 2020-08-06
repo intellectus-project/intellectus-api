@@ -293,13 +293,10 @@ public class UserServiceImpl implements UserService {
         Collection<User> users = getOperatorsBySupervisor(supervisorId);
         List<OperatorDto> operators = new ArrayList<>();
         users.forEach(user -> {
-            OperatorDto dto = new OperatorDto(user.getId(),
-                                              user.getUsername(),
-                                              callService.actualOperatorCall(user) != null ? callService.actualOperatorCall(user).getStartTime() : null,
-                                              statService.lastOperatorStat(user).getPrimaryEmotion());
+            OperatorDto dto = user.toOperatorDto(callService.actualOperatorCall(user) != null ? callService.actualOperatorCall(user).getStartTime() : null,
+                                                 statService.lastOperatorStat(user).getPrimaryEmotion());
             operators.add(dto);
         });
         return operators;
     }
-
 }

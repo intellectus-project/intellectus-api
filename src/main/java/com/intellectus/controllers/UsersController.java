@@ -173,7 +173,7 @@ public class UsersController {
     }
 
     @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
-    @GetMapping("/operators/{id}")
+    @GetMapping("/operators")
     public ResponseEntity<?> getOperatorsBySupervisor(@AuthenticationPrincipal UserPrincipal user)
     {
         Collection<OperatorDto> operators = service.getOperatorsWithInfoBySupervisor(user.getId());
