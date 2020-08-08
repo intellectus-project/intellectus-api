@@ -1,24 +1,21 @@
 package com.intellectus.services;
 
-import com.intellectus.controllers.model.CallRequestPatchDto;
-import com.intellectus.controllers.model.CallRequestPostDto;
-import com.intellectus.controllers.model.RingsChartDto;
+import com.intellectus.controllers.model.*;
 
-import com.intellectus.controllers.model.StatDto;
 import com.intellectus.model.Call;
 import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.CallRepository;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 @Service
 public class CallService {
@@ -107,5 +104,9 @@ public class CallService {
 
     public Call actualOperatorCall(User operator) {
         return callRepository.findActualByOperator(operator.getId());
+    }
+
+    public Collection<CallInfoDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
+        return callRepository.fetchByDate(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX), supervisorId);
     }
 }
