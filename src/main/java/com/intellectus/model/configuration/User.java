@@ -5,6 +5,7 @@ import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.model.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intellectus.model.Call;
+import com.intellectus.model.Shift;
 import com.intellectus.model.constants.Emotion;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,6 +63,10 @@ public class User extends AuditableEntity {
     @JoinColumn(name = "ID_SUPERVISOR")
     @ManyToOne
     private User supervisor;
+
+    @JoinColumn(name = "ID_SHIFT")
+    @ManyToOne
+    private Shift shift;
 
     @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Call> calls = Sets.newHashSet();

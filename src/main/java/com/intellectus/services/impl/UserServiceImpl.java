@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userResponse.getNewPassword());
         user.setRole(role);
         user.setUsername(userResponse.getUsername());
+        user.setShift(userResponse.getShift());
         return repository.save(user);
     }
 

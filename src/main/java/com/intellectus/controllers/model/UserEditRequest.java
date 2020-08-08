@@ -1,5 +1,6 @@
 package com.intellectus.controllers.model;
 
+import com.intellectus.model.Shift;
 import com.intellectus.model.annotations.ValidPassword;
 import com.intellectus.model.configuration.User;
 import lombok.Getter;
@@ -24,5 +25,6 @@ public class UserEditRequest implements Serializable {
     private String type;
     private String selectedKey;
     private User supervisor;
+    private Shift shift;
 
 }
