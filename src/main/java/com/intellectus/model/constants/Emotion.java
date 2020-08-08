@@ -1,19 +1,29 @@
 package com.intellectus.model.constants;
 
+import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+@Getter
 public enum Emotion {
-    EMOTION_SADNESS("EMOTION_SADNESS"),
-    EMOTION_HAPPINESS("EMOTION_HAPPINESS"),
-    EMOTION_FEAR("EMOTION_FEAR"),
-    EMOTION_NEUTRALITY("EMOTION_NEUTRALITY"),
-    EMOTION_ANGER("EMOTION_ANGER");
+    EMOTION_SADNESS(0, "SADNESS"),
+    EMOTION_HAPPINESS(1, "HAPPINESS"),
+    EMOTION_FEAR(2, "FEAR"),
+    EMOTION_NEUTRALITY(3, "NEUTRALITY"),
+    EMOTION_ANGER(4, "ANGER");
 
-    private String emotion;
+    private Integer id;
+    private String description;
 
-    private Emotion(String emotion) {
-        this.emotion = emotion;
+    Emotion(Integer id, String description){
+        this.id = id;
+        this.description = description;
     }
 
-    public String getEmotion() {
-        return this.emotion;
+    public static Optional<Emotion> valueOf(int value) {
+        return Arrays.stream(values())
+                .filter(EmotionEnum -> EmotionEnum.id == value)
+                .findFirst();
     }
 }

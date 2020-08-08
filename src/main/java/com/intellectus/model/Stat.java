@@ -1,12 +1,13 @@
 package com.intellectus.model;
 
+import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.model.constants.Emotion;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 @Getter
@@ -29,11 +30,12 @@ public class Stat {
     @ManyToOne
     private Call call;
 
-    private String speakerType;
+    @Enumerated(EnumType.STRING)
+    private SpeakerType speakerType;
 
     public Stat() {}
 
-    public Stat(double sadness, double happiness, double fear, double neutrality, double anger, Call call, String speakerType){
+    public Stat(double sadness, double happiness, double fear, double neutrality, double anger, Call call, SpeakerType speakerType){
         this.sadness = sadness;
         this.happiness = happiness;
         this.fear = fear;
@@ -43,19 +45,17 @@ public class Stat {
         this.speakerType = speakerType;
     }
 
-    public String getPrimaryEmotion() {
+    public Emotion getPrimaryEmotion() {
         double maxEmotion = Collections.max(Arrays.asList(this.sadness, this.happiness, this.fear, this.neutrality, this.anger));
         if (maxEmotion == sadness){
-            return Emotion.EMOTION_SADNESS.getEmotion();
+            return Emotion.EMOTION_SADNESS;
         } else if (maxEmotion == happiness){
-            return Emotion.EMOTION_HAPPINESS.getEmotion();
+            return Emotion.EMOTION_HAPPINESS;
         } else if (maxEmotion == fear){
-            return Emotion.EMOTION_FEAR.getEmotion();
+            return Emotion.EMOTION_FEAR;
         } else if (maxEmotion == neutrality){
-            return Emotion.EMOTION_NEUTRALITY.getEmotion();
-        } else if (maxEmotion == anger) {
-            return Emotion.EMOTION_ANGER.getEmotion();
+            return Emotion.EMOTION_NEUTRALITY;
         }
-        return "";
+        return Emotion.EMOTION_ANGER;
     }
 }

@@ -13,7 +13,7 @@ public class CallRequestPatchDto {
     @NotNull
     private LocalDateTime endTime;
     @NotNull
-    private String emotion;
+    private Integer emotion;
     @NotNull
     private StatDto consultantStats;
     @NotNull

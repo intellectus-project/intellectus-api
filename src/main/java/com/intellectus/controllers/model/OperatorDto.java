@@ -1,5 +1,6 @@
 package com.intellectus.controllers.model;
 
+import com.intellectus.model.constants.Emotion;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,5 +13,5 @@ public class OperatorDto {
     private String username;
     private Boolean inCall;
     private LocalDateTime callStartTime;
-    private String actualEmotion;
+    private Emotion actualEmotion;
 }

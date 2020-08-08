@@ -31,15 +31,15 @@ public class CallService {
 
     private CallRepository callRepository;
     private StatService statService;
-    private static final String happinessEnum = Emotion.EMOTION_HAPPINESS.getEmotion();
-    private static final String fearEnum = Emotion.EMOTION_FEAR.getEmotion();
-    private static final String angerEnum = Emotion.EMOTION_ANGER.getEmotion();
-    private static final String neutralityEnum = Emotion.EMOTION_NEUTRALITY.getEmotion();
-    private static final String sadnessEnum = Emotion.EMOTION_SADNESS.getEmotion();
+    private static final int happinessEnum = Emotion.EMOTION_HAPPINESS.getId();
+    private static final int fearEnum = Emotion.EMOTION_FEAR.getId();
+    private static final int angerEnum = Emotion.EMOTION_ANGER.getId();
+    private static final int neutralityEnum = Emotion.EMOTION_NEUTRALITY.getId();
+    private static final int sadnessEnum = Emotion.EMOTION_SADNESS.getId();
 
     public RingsChartDto getRingsChart(LocalDate dateFrom, LocalDate dateTo){
         List<Stat> stats = statService.getStatsBetweenDates(dateFrom, dateTo);
-        Map<String, Double> emotionMap = new HashMap<>();
+        Map<Integer, Double> emotionMap = new HashMap<>();
 
         stats.forEach(stat -> {
             emotionMap.put(happinessEnum, emotionMap.get(happinessEnum)  == null ? 0.0 + stat.getHappiness() : emotionMap.get(happinessEnum) + stat.getHappiness());
@@ -51,11 +51,11 @@ public class CallService {
 
         int numberOfRecords = stats.size();
 
-        double happinessAvg = emotionMap.get(happinessEnum) / numberOfRecords;
-        double fearAvg = emotionMap.get(fearEnum)  / numberOfRecords;
-        double angryAvg = emotionMap.get(angerEnum) / numberOfRecords;
-        double neutralityAvg = emotionMap.get(neutralityEnum) / numberOfRecords;
-        double sadnessAvg = emotionMap.get(sadnessEnum) / numberOfRecords;
+        double happinessAvg = numberOfRecords == 0 ? 0 : emotionMap.get(happinessEnum) / numberOfRecords;
+        double fearAvg = numberOfRecords == 0 ? 0 : emotionMap.get(fearEnum)  / numberOfRecords;
+        double angryAvg = numberOfRecords == 0 ? 0 : emotionMap.get(angerEnum) / numberOfRecords;
+        double neutralityAvg = numberOfRecords == 0 ? 0 : emotionMap.get(neutralityEnum) / numberOfRecords;
+        double sadnessAvg = numberOfRecords == 0 ? 0 : emotionMap.get(sadnessEnum) / numberOfRecords;
 
         return RingsChartDto.builder()
                 .anger(angryAvg)
@@ -79,7 +79,8 @@ public class CallService {
             throw new Exception("Call does not exist");
         Call call = optionalCall.get();
         call.setEndTime(callDto.getEndTime());
-        call.setEmotion(callDto.getEmotion());
+        //todo: handle inexistent emotion exception
+        call.setEmotion(Emotion.valueOf(callDto.getEmotion()).get());
 
         callRepository.save(call);
 
@@ -90,7 +91,7 @@ public class CallService {
                 consultantDto.getNeutrality(),
                 consultantDto.getAnger(),
                 call,
-                SpeakerType.SPEAKER_TYPE_CONSULTANT.getSpeakerType());
+                SpeakerType.SPEAKER_TYPE_CONSULTANT);
         statService.create(consultantStats);
 
         StatDto operatorDto = callDto.getOperatorStats();
@@ -100,7 +101,7 @@ public class CallService {
                 operatorDto.getNeutrality(),
                 operatorDto.getAnger(),
                 call,
-                SpeakerType.SPEAKER_TYPE_OPERATOR.getSpeakerType());
+                SpeakerType.SPEAKER_TYPE_OPERATOR);
         statService.create(operatorStats);
     }
 

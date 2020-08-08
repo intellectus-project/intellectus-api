@@ -1,6 +1,7 @@
 package com.intellectus.model;
 
 import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Emotion;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,9 @@ public class Call extends AuditableEntity{
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String emotion;
+
+    @Enumerated(EnumType.STRING)
+    private Emotion emotion;
 
     public Call() {}
 
@@ -34,7 +37,7 @@ public class Call extends AuditableEntity{
         this.startTime = startTime;
     }
 
-    public Call(User user, LocalDateTime startTime, LocalDateTime endTime, String emotion) {
+    public Call(User user, LocalDateTime startTime, LocalDateTime endTime, Emotion emotion) {
         this.user = user;
         this.startTime = startTime;
         this.endTime = endTime;

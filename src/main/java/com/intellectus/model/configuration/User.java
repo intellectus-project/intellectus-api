@@ -5,6 +5,7 @@ import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.model.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intellectus.model.Call;
+import com.intellectus.model.constants.Emotion;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -106,7 +107,7 @@ public class User extends AuditableEntity {
         return Objects.hash(id, name, lastName, email, phone, username, password, role, active);
     }
 
-    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, String emotion){
+    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, Emotion emotion){
         return OperatorDto.builder()
                 .id(this.id)
                 .username(this.username)
