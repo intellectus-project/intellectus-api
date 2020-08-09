@@ -178,17 +178,17 @@ public class DBInitializer implements CommandLineRunner {
             menuRepository.save(menu.get());
         }
 
-        if(shiftRepository.findShiftByName("Mañana").isEmpty()) {
+        if(!shiftRepository.findShiftByName("Mañana").isPresent()) {
             Shift mañana = new Shift("Mañana", 0, 8);
             shiftRepository.save(mañana);
         }
 
-        if(shiftRepository.findShiftByName("Tarde").isEmpty()) {
+        if(!shiftRepository.findShiftByName("Tarde").isPresent()) {
             Shift tarde = new Shift("Tarde", 8, 16);
             shiftRepository.save(tarde);
         }
 
-        if(shiftRepository.findShiftByName("Noche").isEmpty()) {
+        if(!shiftRepository.findShiftByName("Noche").isPresent()) {
             Shift noche = new Shift("Noche", 16, 24);
             shiftRepository.save(noche);
         }
