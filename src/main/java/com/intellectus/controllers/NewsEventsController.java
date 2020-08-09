@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET})
 public class NewsEventsController {
 
-    public static final String URL_MAPPING_NEWS_EVENTS = "/news_events";
+    public static final String URL_MAPPING_NEWS_EVENTS = "/newsEvents";
     private NewsEventService newsEventService;
 
     @Autowired
