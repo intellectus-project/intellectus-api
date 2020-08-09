@@ -1,16 +1,23 @@
 package com.intellectus.repositories;
 
+import com.intellectus.controllers.model.NewsEventDto;
 import com.intellectus.model.NewsEvent;
+import org.apache.tomcat.jni.Local;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface NewsEventRepository extends CrudRepository<NewsEvent, Long> {
+public interface NewsEventRepository extends JpaRepository<NewsEvent, Long> {
 
     @Query("from NewsEvent where url = :url")
     List<NewsEvent> findByUrl(@Param("url") String url);
+
+    List<NewsEventDto> findAllByCreatedBetweenOrderByIdDesc(LocalDateTime dateFrom, LocalDateTime dateTo);
 }
