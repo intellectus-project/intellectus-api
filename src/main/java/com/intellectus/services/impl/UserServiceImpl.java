@@ -2,12 +2,14 @@ package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
+import com.intellectus.model.Shift;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
 import com.intellectus.services.CallService;
+import com.intellectus.services.ShiftService;
 import com.intellectus.services.StatService;
 import com.intellectus.services.filters.FilterUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +52,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     StatService statService;
+
+    @Autowired
+    ShiftService shiftService;
 
     @Override
     public Collection<User> findAll() {
@@ -107,6 +112,11 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Password not found.");
         }
 
+        Long shiftId = userResponse.getShiftId();
+        Optional<Shift> shift = null;
+        if (shiftId != null)
+             shift = shiftService.findById(shiftId);
+
         Role role = roleRepository.findByCode(userResponse.getRole());
         user.setName(userResponse.getName());
         user.setLastName(userResponse.getLastName());
@@ -115,6 +125,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userResponse.getNewPassword());
         user.setRole(role);
         user.setUsername(userResponse.getUsername());
+        user.setShift(shift.isPresent() ? shift.get() : user.getShift());
         return repository.save(user);
     }
 
