@@ -25,6 +25,6 @@ public class UserEditRequest implements Serializable {
     private String type;
     private String selectedKey;
     private User supervisor;
-    private Shift shift;
+    private Long shiftId;
 
 }

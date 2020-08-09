@@ -23,6 +23,10 @@ public class Shift extends AuditableEntity {
 
     public Shift() {}
 
+    public Shift(Long id) {
+        this.id = id;
+    }
+
     public Shift(String name, Integer startHour, Integer endHour) {
         this.name = name;
         this.startHour = startHour;

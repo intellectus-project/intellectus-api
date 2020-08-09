@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShiftService {
@@ -20,4 +21,6 @@ public class ShiftService {
     public List<Shift> findAll() {
         return (List<Shift>) shiftRepository.findAll();
     }
+
+    public Optional<Shift> findById(Long id) { return shiftRepository.findById(id); }
 }
