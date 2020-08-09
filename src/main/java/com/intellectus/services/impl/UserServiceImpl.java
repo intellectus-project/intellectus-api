@@ -318,7 +318,7 @@ public class UserServiceImpl implements UserService {
         operator.setSupervisor(supervisor);
         repository.save(operator);
     }
-    
+
     public boolean exists(Long userId){
         try {
             this.findById(userId);

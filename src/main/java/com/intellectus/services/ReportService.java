@@ -31,7 +31,13 @@ public class ReportService {
     private static final int neutralityEnum = Emotion.EMOTION_NEUTRALITY.getId();
     private static final int sadnessEnum = Emotion.EMOTION_SADNESS.getId();
 
-    public RingsChartDto getRingsChart(LocalDate dateFrom, LocalDate dateTo){
+    public RingsChartDto getRingsChart(LocalDate dateFrom, LocalDate dateTo, Optional<Long> operatorId){
+        Optional<User> user = Optional.empty();
+        if (operatorId.isPresent()){
+            user = Optional.of(userService.findById(operatorId.get()));
+            if(!user.get().getRole().getCode().equals(Role.ROLE_OPERATOR.role())) throw new RuntimeException("The specified user id must correspond to a supervisor");
+        }
+
         List<Stat> stats = statService.getStatsBetweenDates(dateFrom, dateTo);
         Map<Integer, Double> emotionMap = new HashMap<>();
 
