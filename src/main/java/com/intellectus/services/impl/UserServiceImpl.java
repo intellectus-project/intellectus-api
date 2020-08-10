@@ -310,4 +310,10 @@ public class UserServiceImpl implements UserService {
         });
         return operators;
     }
+
+    public void assignSupervisorToOperator(User supervisor, Long operatorId) {
+        User operator = findById(operatorId);
+        operator.setSupervisor(supervisor);
+        repository.save(operator);
+    }
 }

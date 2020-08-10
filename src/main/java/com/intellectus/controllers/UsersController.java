@@ -179,4 +179,13 @@ public class UsersController {
         Collection<OperatorDto> operators = service.getOperatorsWithInfoBySupervisor(user.getId());
         return ResponseEntity.ok().body(operators);
     }
+
+    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
+    @PostMapping("/{id}/assignSupervisor")
+    public ResponseEntity<?> assignSupervisorToOperator(@AuthenticationPrincipal UserPrincipal supervisor,
+                                                        @PathVariable @Min(1) Long id)
+    {
+        service.assignSupervisorToOperator(service.findById(supervisor.getId()), id);
+        return ResponseEntity.ok().body("");
+    }
 }
