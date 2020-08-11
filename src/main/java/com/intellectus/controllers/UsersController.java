@@ -181,11 +181,17 @@ public class UsersController {
     }
 
     @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
-    @PostMapping("/{id}/assignSupervisor")
+    @PostMapping("/assignSupervisor")
     public ResponseEntity<?> assignSupervisorToOperator(@AuthenticationPrincipal UserPrincipal supervisor,
-                                                        @PathVariable @Min(1) Long id)
+                                                        @RequestParam @Min(1) Long id)
     {
-        service.assignSupervisorToOperator(service.findById(supervisor.getId()), id);
-        return ResponseEntity.ok().body("");
+        try{
+            service.assignSupervisorToOperator(service.findById(supervisor.getId()), id);
+        }catch (UsernameNotFoundException unfe){
+            return ResponseEntity.badRequest().body(String.format("Supervisor with id %s not found", id));
+        }catch (Exception ex){git
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+        return ResponseEntity.ok().body("assigned.");
     }
 }
