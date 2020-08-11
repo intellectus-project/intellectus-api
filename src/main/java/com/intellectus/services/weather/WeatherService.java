@@ -11,9 +11,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -38,7 +35,6 @@ public class WeatherService {
 
     public void fetch() {
         try {
-            if (!itIsOClock()) return;
             Request request = new Request.Builder()
                     .url(BASE_URL + "weather?id=" + BUENOS_AIRES_ID.toString() + "&appid=" + API_KEY + "&lang=es")
                     .build();
@@ -66,12 +62,6 @@ public class WeatherService {
 
     private Double kelvinToCelsius(Double kelvin){
         return kelvin - 273.15;
-    }
-
-    private boolean itIsOClock() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        return sdf.format(calendar.getTime()).equals("00:00");
     }
 }
 
