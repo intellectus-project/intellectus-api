@@ -189,7 +189,7 @@ public class UsersController {
             service.assignSupervisorToOperator(service.findById(supervisor.getId()), id);
         }catch (UsernameNotFoundException unfe){
             return ResponseEntity.badRequest().body(String.format("Supervisor with id %s not found", id));
-        }catch (Exception ex){git
+        }catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
         return ResponseEntity.ok().body("assigned.");

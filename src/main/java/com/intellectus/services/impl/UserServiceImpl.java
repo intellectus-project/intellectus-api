@@ -313,7 +313,7 @@ public class UserServiceImpl implements UserService {
 
     public void assignSupervisorToOperator(User supervisor, Long operatorId) {
         User operator = findById(operatorId);
-        if(operator.getRole().getCode() != com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
+        if(!operator.getRole().getCode().equals(com.intellectus.model.constants.Role.ROLE_OPERATOR.role()))
             throw new RuntimeException("The id provided does not correspond to an operator");
         operator.setSupervisor(supervisor);
         repository.save(operator);
