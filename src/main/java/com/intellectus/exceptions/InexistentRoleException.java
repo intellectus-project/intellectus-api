@@ -1,6 +1,6 @@
 package com.intellectus.exceptions;
 
-public class InexistentRoleException extends Exception{
+public class InexistentRoleException extends RuntimeException{
 
     public InexistentRoleException(){};
 }

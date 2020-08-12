@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,15 +27,17 @@ public class Call extends AuditableEntity{
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private LocalDate occurrenceDay;
 
     @Enumerated(EnumType.STRING)
     private Emotion emotion;
 
     public Call() {}
 
-    public Call(User user, LocalDateTime startTime) {
+    public Call(User user, LocalDateTime startTime, LocalDate occurrenceDay) {
         this.user = user;
         this.startTime = startTime;
+        this.occurrenceDay = occurrenceDay;
     }
 
     public Call(User user, LocalDateTime startTime, LocalDateTime endTime, Emotion emotion) {
