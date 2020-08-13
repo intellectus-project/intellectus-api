@@ -50,12 +50,13 @@ public class DBInitializer implements CommandLineRunner {
             Menu mViewDashboard = menuRepository.save(Menu.builder().name("Dashboard")
                     .code("VIEW_DASHBOARD")
                     .icon("bar-chart")
-                    .order(4)
+                    .uri("/dashboard")
+                    .order(0)
                     .build());
             Menu mMainUser = menuRepository.save(Menu.builder().name("Perfil")
                     .code("USERS")
                     .icon("user")
-                    .order(3)
+                    .order(2)
                     .build());
             Menu mViewUser = menuRepository.save(Menu.builder().name("Ver Perfil")
                     .code("VIEW_PROFILE")
@@ -77,7 +78,7 @@ public class DBInitializer implements CommandLineRunner {
             Menu mManageUsers = menuRepository.save(Menu.builder().name("Usuarios")
                     .code("MANAGE_USERS")
                     .icon("setting")
-                    .order(2)
+                    .order(1)
                     .uri("/administration")
                     .type("GET")
                     .build());
