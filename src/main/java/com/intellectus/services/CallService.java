@@ -19,7 +19,7 @@ import java.util.*;
 public class CallService {
 
     @Autowired
-    public CallService(CallRepository callRepository, StatService statService, UserServiceImpl userService){
+    public CallService(CallRepository callRepository, StatService statService, UserServiceImpl userService) {
         this.callRepository = callRepository;
         this.statService = statService;
     }
@@ -34,9 +34,9 @@ public class CallService {
         return call.getId();
     }
 
-    public void update(CallRequestPatchDto callDto, Long id) throws Exception{
+    public void update(CallRequestPatchDto callDto, Long id) throws Exception {
         Optional<Call> optionalCall = callRepository.findById((id));
-        if(optionalCall.isEmpty())
+        if (optionalCall.isEmpty())
             throw new Exception("Call does not exist");
         Call call = optionalCall.get();
         call.setEndTime(callDto.getEndTime());
@@ -68,6 +68,10 @@ public class CallService {
 
     public Call actualOperatorCall(User operator) {
         return callRepository.findActualByOperator(operator.getId());
+    }
+
+    public Optional<Call>   findById(Long id) {
+        return callRepository.findById(id);
     }
 
 }
