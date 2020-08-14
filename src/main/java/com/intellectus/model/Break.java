@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,6 +24,10 @@ public class Break extends AuditableEntity {
     @JoinColumn(name = "ID_CALL")
     @ManyToOne
     private Call call;
+
+    private LocalDateTime created;
+
+    public Break() {}
 
     public Break(Call call) {
         this.call = call;

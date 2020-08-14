@@ -70,7 +70,7 @@ public class CallService {
         return callRepository.findActualByOperator(operator.getId());
     }
 
-    public Optional<Call>   findById(Long id) {
+    public Optional<Call> findById(Long id) {
         return callRepository.findById(id);
     }
 

@@ -1,21 +1,15 @@
 package com.intellectus.controllers;
 
-import com.intellectus.controllers.model.CallRequestPostDto;
-import com.intellectus.controllers.model.CallResponseDto;
-import com.intellectus.model.configuration.User;
-import com.intellectus.security.UserPrincipal;
-import com.intellectus.services.CallService;
 import com.intellectus.services.newsEvent.NewsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @Slf4j
