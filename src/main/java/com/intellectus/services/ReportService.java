@@ -35,7 +35,7 @@ public class ReportService {
         Optional<User> user = Optional.empty();
         if (operatorId.isPresent()){
             user = Optional.of(userService.findById(operatorId.get()));
-            if(!user.get().getRole().getCode().equals(Role.ROLE_OPERATOR.role())) throw new RuntimeException("The specified user id must correspond to a supervisor");
+            if(!user.get().getRole().getCode().equals(Role.ROLE_OPERATOR.role())) throw new RuntimeException("The specified user id must correspond to an operator");
         }
 
         List<Stat> stats = statService.getStatsBetweenDates(dateFrom, dateTo);

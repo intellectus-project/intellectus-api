@@ -27,6 +27,7 @@ public class CallService {
     public CallService(CallRepository callRepository,
                        StatService statService,
                        WeatherService weatherService){
+
         this.callRepository = callRepository;
         this.statService = statService;
         this.weatherService = weatherService;
@@ -42,9 +43,9 @@ public class CallService {
         return call.getId();
     }
 
-    public void update(CallRequestPatchDto callDto, Long id) throws Exception{
+    public void update(CallRequestPatchDto callDto, Long id) throws Exception {
         Optional<Call> optionalCall = callRepository.findById((id));
-        if(optionalCall.isEmpty())
+        if (optionalCall.isEmpty())
             throw new Exception("Call does not exist");
         Call call = optionalCall.get();
         call.setEndTime(callDto.getEndTime());
@@ -89,5 +90,9 @@ public class CallService {
             callInfoDto.setWeather(weatherService.getWeatherAt(callInfoDto.getStartTime()));
         });
         return dtos;
+    }
+
+    public Optional<Call> findById(Long id) {
+        return callRepository.findById(id);
     }
 }

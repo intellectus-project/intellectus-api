@@ -59,7 +59,7 @@ public class UsersController {
                                     @RequestParam("page") @Min(0) @Max(9999999) int page,
                                     @RequestParam("size") @Min(1) @Max(9999) int size,
                                     @RequestParam(required=false) String searchCriteria,
-                                    @RequestParam(required=false) Boolean enabled,
+                                    @RequestParam(required=false)  Boolean enabled,
                                     @RequestParam(required=false) String role,
                                     @RequestParam(required=false) String zone,
                                     @RequestParam(required=false) String country) {

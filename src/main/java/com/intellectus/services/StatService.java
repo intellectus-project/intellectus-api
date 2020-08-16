@@ -9,6 +9,7 @@ import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,7 +34,7 @@ public class StatService {
         statRepository.save(stat);
     }
 
-    public Stat lastOperatorStat(User operator) {
+    public Optional<Stat> lastOperatorStat(User operator) {
         return statRepository.findLastByOperator(operator.getId());
     }
 
