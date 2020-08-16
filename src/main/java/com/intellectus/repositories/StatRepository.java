@@ -27,7 +27,7 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
             "order by c.created desc " +
             "limit 1",
           nativeQuery = true)
-    Stat findLastByOperator(@Param("id") Long id);
+    Optional<Stat> findLastByOperator(@Param("id") Long id);
 
     @Query("select new com.intellectus.controllers.model.BarsChartDto( avg(s.sadness), " +
             " avg(s.happiness)," +
