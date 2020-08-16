@@ -194,4 +194,13 @@ public class UsersController {
         }
         return ResponseEntity.ok().body("assigned.");
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISOR', 'ROLE_OPERATOR')")
+    @GetMapping("/operatorEmotionStatus")
+    public ResponseEntity<?> getOperatorEmotionStatus(@AuthenticationPrincipal UserPrincipal operator,
+                                                      @RequestParam Optional<Long> operatorId)
+    {
+        User user = operatorId.isPresent() ? service.findById(operatorId.get()) : service.findById(operator.getId());
+        return ResponseEntity.ok().body(service.getOperatorEmotionStatus(user));
+    }
 }

@@ -18,4 +18,11 @@ public interface CallRepository extends CrudRepository<Call, Long> {
             "limit 1",
             nativeQuery = true)
     Call findActualByOperator(@Param("id") Long id);
+
+    @Query(value = "select * from calls c " +
+            "where c.id_user = :id AND end_time iS NOT NULL " +
+            "order by c.created desc " +
+            "limit 1",
+            nativeQuery = true)
+    Call findLastByOperator(@Param("id") Long id);
 }

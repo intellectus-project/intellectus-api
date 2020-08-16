@@ -73,5 +73,8 @@ public class CallService {
     public Optional<Call> findById(Long id) {
         return callRepository.findById(id);
     }
+    public Call lastOperatorCall(User operator) {
+        return callRepository.findLastByOperator(operator.getId());
+    }
 
 }
