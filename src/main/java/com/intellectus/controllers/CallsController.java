@@ -8,6 +8,7 @@ import com.intellectus.security.UserPrincipal;
 import com.intellectus.services.CallService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.time.LocalDate;
 
 @RestController
 @Slf4j
@@ -50,6 +52,17 @@ public class CallsController {
             callService.update(call, id);
             return ResponseEntity.ok().body("updated");
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> fetch(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+                                   @AuthenticationPrincipal UserPrincipal principal) {
+        try {
+            return ResponseEntity.ok().body(callService.fetchByDate(dateFrom, dateTo, principal.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

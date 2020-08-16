@@ -8,25 +8,34 @@ import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.CallRepository;
+import com.intellectus.services.weather.WeatherService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import com.intellectus.services.impl.UserServiceImpl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CallService {
 
     @Autowired
-    public CallService(CallRepository callRepository, StatService statService, UserServiceImpl userService) {
+    public CallService(CallRepository callRepository,
+                       StatService statService,
+                       WeatherService weatherService){
+
         this.callRepository = callRepository;
         this.statService = statService;
+        this.weatherService = weatherService;
     }
 
     private CallRepository callRepository;
     private StatService statService;
-
+    private WeatherService weatherService;
 
     public Long create(User user, CallRequestPostDto callDto) {
         Call call = new Call(user, callDto.getStartTime(), callDto.getStartTime().toLocalDate());
@@ -70,8 +79,20 @@ public class CallService {
         return callRepository.findActualByOperator(operator.getId());
     }
 
+    public Collection<CallInfoDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
+        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetween(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+        List<CallInfoDto> dtos = calls
+                .stream()
+                .map(Call::toDto)
+                .collect(Collectors.toList());
+
+        dtos.forEach(callInfoDto -> {
+            callInfoDto.setWeather(weatherService.getWeatherAt(callInfoDto.getStartTime()));
+        });
+        return dtos;
+    }
+
     public Optional<Call> findById(Long id) {
         return callRepository.findById(id);
     }
-
 }
