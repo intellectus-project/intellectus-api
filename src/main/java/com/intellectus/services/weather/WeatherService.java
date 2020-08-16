@@ -11,6 +11,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -26,7 +31,11 @@ public class WeatherService {
     private static final Integer BUENOS_AIRES_ID = 3433955;
 
     @Autowired
-    WeatherRepository weatherRepository;
+    public WeatherService(WeatherRepository weatherRepository){
+        this.weatherRepository = weatherRepository;
+    }
+
+    private WeatherRepository weatherRepository;
 
     private final OkHttpClient client = new OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
@@ -53,11 +62,17 @@ public class WeatherService {
         try {
             Double temp = kelvinToCelsius(jsonResponse.getJSONObject("main").getDouble("temp"));
             String description = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("description");
-            Weather weather = new Weather(description, temp);
+            LocalDateTime now = LocalDateTime.now();
+            Weather weather = new Weather(description, temp, now);
             weatherRepository.save(weather);
         } catch (Exception e) {
             log.error(e.getStackTrace().toString());
         }
+    }
+
+    public Weather getWeatherAt(LocalDateTime dateTime){
+        List<Weather> weathers = weatherRepository.findByTimeBeforeOrderByTimeDesc(dateTime);
+        return weathers.stream().findFirst().orElse(null);
     }
 
     private Double kelvinToCelsius(Double kelvin){

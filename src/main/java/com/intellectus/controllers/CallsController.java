@@ -57,14 +57,12 @@ public class CallsController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<?> fetch(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
                                    @AuthenticationPrincipal UserPrincipal supervisor) {
         try {
             return ResponseEntity.ok().body(callService.fetchByDate(dateFrom, dateTo, supervisor.getId()));
-
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

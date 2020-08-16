@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface CallRepository extends CrudRepository<Call, Long>, CallRepositoryCustom {
+public interface CallRepository extends CrudRepository<Call, Long> {
 
     @Query(value = "select * from calls c " +
             "where c.id_user = :id AND end_time iS NULL " +
@@ -22,5 +22,10 @@ public interface CallRepository extends CrudRepository<Call, Long>, CallReposito
             "limit 1",
             nativeQuery = true)
     Call findActualByOperator(@Param("id") Long id);
+
+    /*@Query("SELECT NEW com.intellectus.controllers.model.CallInfoDto(Call.startTime, Call.endTime, Call.user.shift, Call.user) " +
+            "From Call " +
+            "WHERE Call.user.supervisor.id = :id AND Call.startTime >= :dateFrom and Call.endTime <= :dateTo ")*/
+    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetween(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
 
 }

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Getter
+@Builder
 @Setter
 public class CallInfoDto  {
     private LocalDateTime startTime;
@@ -18,11 +19,4 @@ public class CallInfoDto  {
     private Weather weather;
     private Shift shift;
     private User operator;
-
-    public CallInfoDto(LocalDateTime startTime, LocalDateTime endTime, Shift shift, User operator) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.shift = shift;
-        this.operator = operator;
-    }
 }
