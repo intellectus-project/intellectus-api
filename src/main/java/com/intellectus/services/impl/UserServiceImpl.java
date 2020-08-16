@@ -3,6 +3,7 @@ package com.intellectus.services.impl;
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
 import com.intellectus.model.Shift;
+import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -304,8 +306,9 @@ public class UserServiceImpl implements UserService {
         Collection<User> users = getOperatorsBySupervisor(supervisorId);
         List<OperatorDto> operators = new ArrayList<>();
         users.forEach(user -> {
+            Optional<Stat> stat = statService.lastOperatorStat(user);
             OperatorDto dto = user.toOperatorDto(callService.actualOperatorCall(user) != null ? callService.actualOperatorCall(user).getStartTime() : null,
-                                                 statService.lastOperatorStat(user).getPrimaryEmotion());
+                                                 stat.map(Stat::getPrimaryEmotion).orElse(null));
             operators.add(dto);
         });
         return operators;
