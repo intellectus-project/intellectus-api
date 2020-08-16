@@ -1,6 +1,7 @@
 package com.intellectus.model;
 
 import com.intellectus.controllers.model.CallInfoDto;
+import com.intellectus.controllers.model.ReducedUserInfoDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import lombok.Getter;
@@ -52,7 +53,7 @@ public class Call extends AuditableEntity{
                 .shift(this.user.getShift())
                 .startTime(this.startTime)
                 .endTime(this.endTime)
-                .operator(this.user)
+                .operator(new ReducedUserInfoDto(this.user.getId(), this.user.getName()))
                 .build();
     }
 }
