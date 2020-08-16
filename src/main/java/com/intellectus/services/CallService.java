@@ -14,12 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.intellectus.services.impl.UserServiceImpl;
 
-<<<<<<< HEAD
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-=======
->>>>>>> 8edbd7be5f3e78cb7a36fefa495264b33a975408
 import java.util.*;
 
 @Service
