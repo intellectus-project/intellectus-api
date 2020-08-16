@@ -179,4 +179,19 @@ public class UsersController {
         Collection<OperatorDto> operators = service.getOperatorsWithInfoBySupervisor(user.getId());
         return ResponseEntity.ok().body(operators);
     }
+
+    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
+    @PostMapping("/assignSupervisor")
+    public ResponseEntity<?> assignSupervisorToOperator(@AuthenticationPrincipal UserPrincipal supervisor,
+                                                        @RequestParam @Min(1) Long id)
+    {
+        try{
+            service.assignSupervisorToOperator(service.findById(supervisor.getId()), id);
+        }catch (UsernameNotFoundException unfe){
+            return ResponseEntity.badRequest().body(String.format("Supervisor with id %s not found", id));
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+        return ResponseEntity.ok().body("assigned.");
+    }
 }

@@ -43,4 +43,5 @@ public interface UserService {
 
     Collection<OperatorDto> getOperatorsWithInfoBySupervisor(Long supervisorId);
 
+    void assignSupervisorToOperator(User supervisor, Long operatorId);
 }

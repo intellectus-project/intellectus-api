@@ -1,15 +1,23 @@
 package com.intellectus.controllers;
 
 
+import com.intellectus.controllers.model.BarsChartDto;
 import com.intellectus.controllers.model.RingsChartDto;
+import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Role;
 import com.intellectus.services.CallService;
+import com.intellectus.services.ReportService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -20,17 +28,46 @@ public class ReportsController {
     public static final String URL_MAPPING_REPORTS = "/reports";
 
     @Autowired
-    public ReportsController(CallService callService){
-        this.callService = callService;
+    public ReportsController(ReportService reportService){
+        this.reportService = reportService;
     }
 
-    private CallService callService;
+    private ReportService reportService;
 
     @GetMapping("/ringsChart")
-    public ResponseEntity<RingsChartDto> getRingsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
-                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo)
+    public ResponseEntity<?> getRingsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+                                                       @RequestParam Optional<Long> operatorId)
     {
-        return ResponseEntity.ok().body(callService.getRingsChart(dateFrom, dateTo));
+        RingsChartDto ringsChartDto;
+        try {
+            ringsChartDto = reportService.getRingsChart(dateFrom, dateTo, operatorId);
+        }catch (UsernameNotFoundException usernameNotFoundException){
+            return ResponseEntity.badRequest().body(String.format("User with id %s not found", operatorId.get()));
+        }catch (RuntimeException rex){
+            return ResponseEntity.badRequest().body(rex.getMessage());
+        }
+
+
+        return ResponseEntity.ok().body(ringsChartDto);
+    }
+
+    @GetMapping("/barsChart")
+    public ResponseEntity<?> getBarsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+                                                     @RequestParam Optional<Long> operatorId)
+    {
+        List<BarsChartDto> barsChartDtoList;
+        try {
+            barsChartDtoList = reportService.getBarsChart(dateFrom, dateTo, operatorId);
+        }catch (UsernameNotFoundException usernameNotFoundException){
+            return ResponseEntity.badRequest().body(String.format("User with id %s not found", operatorId.get()));
+        }catch (RuntimeException rex){
+            return ResponseEntity.badRequest().body(rex.getMessage());
+        }
+
+
+        return ResponseEntity.ok().body(barsChartDtoList);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.intellectus.services.newsEvent;
 
+import com.intellectus.controllers.model.NewsEventDto;
 import com.intellectus.model.NewsEvent;
 import com.intellectus.repositories.NewsEventRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -68,5 +74,9 @@ public class NewsEventService {
         } catch (Exception e) {
             log.error(e.getStackTrace().toString());
         }
+    }
+
+    public List<NewsEventDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo) {
+        return newsEventRepository.findAllByCreatedBetweenOrderByCreatedDesc(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
     }
 }

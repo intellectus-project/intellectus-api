@@ -16,7 +16,7 @@ public class SaveWeatherTask {
         this.weatherService = weatherService;
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 60)
+    @Scheduled(cron = "0 * * * * ?")
     public void perform() {
         weatherService.fetch();
     }
