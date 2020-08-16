@@ -197,8 +197,16 @@ public class UsersController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/supervisors")
-    public ResponseEntity<?> getSupervisors(@AuthenticationPrincipal UserPrincipal user)
-    {
+    public ResponseEntity<?> getSupervisors(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok().body(service.getSupervisors());
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISOR', 'ROLE_OPERATOR')")
+    @GetMapping("/operatorEmotionStatus")
+    public ResponseEntity<?> getOperatorEmotionStatus(@AuthenticationPrincipal UserPrincipal operator,
+                                                      @RequestParam Optional<Long> operatorId)
+    {
+        User user = operatorId.isPresent() ? service.findById(operatorId.get()) : service.findById(operator.getId());
+        return ResponseEntity.ok().body(service.getOperatorEmotionStatus(user));
     }
 }

@@ -2,11 +2,13 @@ package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
+import com.intellectus.model.Call;
 import com.intellectus.model.Shift;
 import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Emotion;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
 import com.intellectus.services.CallService;
@@ -355,5 +357,20 @@ public class UserServiceImpl implements UserService {
     public List<User> getSupervisors() {
         Role role = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role());
         return repository.findAllByRole(role);
+    }
+
+    public StatDto getOperatorEmotionStatus(User operator) {
+        Optional<Stat> opStat = statService.lastOperatorStat(operator);
+        if(!opStat.isPresent()) {
+            return StatDto.builder().build();
+        }
+        Stat stat = opStat.get();
+        return StatDto.builder()
+                      .sadness(stat.getSadness())
+                      .anger(stat.getAnger())
+                      .fear(stat.getFear())
+                      .happiness(stat.getHappiness())
+                      .neutrality(stat.getNeutrality())
+                      .build();
     }
 }
