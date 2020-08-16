@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface WeatherRepository extends CrudRepository<Weather, Long> {
-    List<Weather> findByTimeBeforeOrderByTimeDesc(LocalDateTime date);
+    List<Weather> findByTimeAfterAndTimeBeforeOrderByTimeDesc(LocalDateTime dateFrom, LocalDateTime dateTo);
 }
 

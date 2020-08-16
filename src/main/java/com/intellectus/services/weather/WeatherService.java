@@ -71,7 +71,7 @@ public class WeatherService {
     }
 
     public Weather getWeatherAt(LocalDateTime dateTime){
-        List<Weather> weathers = weatherRepository.findByTimeBeforeOrderByTimeDesc(dateTime);
+        List<Weather> weathers = weatherRepository.findByTimeAfterAndTimeBeforeOrderByTimeDesc(dateTime.minusDays(1), dateTime);
         return weathers.stream().findFirst().orElse(null);
     }
 
