@@ -330,4 +330,9 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+    public List<User> getSupervisors() {
+        Role role = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role());
+        return repository.findAllByRole(role);
+    }
 }

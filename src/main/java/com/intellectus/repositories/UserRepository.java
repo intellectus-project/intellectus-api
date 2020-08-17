@@ -2,6 +2,7 @@ package com.intellectus.repositories;
 
 import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.model.NewsEvent;
+import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,5 +28,7 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     Page<User> findAll(Pageable pageable);
 
     Collection<User> findOperatorsBySupervisorId(@Param("id") Long id);
+
+    List<User> findAllByRole(@Param("role") Role role);
 
 }
