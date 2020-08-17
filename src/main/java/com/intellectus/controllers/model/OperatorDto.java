@@ -13,5 +13,6 @@ public class OperatorDto {
     private String username;
     private Boolean inCall;
     private LocalDateTime callStartTime;
-    private Emotion actualEmotion;
+    private EmotionDto primaryEmotion;
+    private EmotionDto secondaryEmotion;
 }

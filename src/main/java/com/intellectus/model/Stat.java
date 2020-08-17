@@ -1,5 +1,6 @@
 package com.intellectus.model;
 
+import com.intellectus.controllers.model.EmotionDto;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.model.constants.Emotion;
 
@@ -8,7 +9,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,15 +48,26 @@ public class Stat {
         this.speakerType = speakerType;
     }
 
-    public Emotion getPrimaryEmotion() {
+    public EmotionDto getPrimaryEmotion() {
         double maxEmotion = Collections.max(Arrays.asList(this.sadness, this.happiness, this.fear, this.neutrality, this.anger));
-        if (maxEmotion == sadness){
+        return new EmotionDto(findEmotion(maxEmotion), maxEmotion);
+    }
+
+    public EmotionDto getSecondaryEmotion() {
+        List<Double> emotions = Arrays.asList(this.sadness, this.happiness, this.fear, this.neutrality, this.anger);
+        Collections.sort(emotions);
+        double secondMaxEmotion = emotions.get(1);
+        return new EmotionDto(findEmotion(secondMaxEmotion), secondMaxEmotion);
+    }
+
+    private Emotion findEmotion(double emotion){
+        if (emotion == sadness){
             return Emotion.EMOTION_SADNESS;
-        } else if (maxEmotion == happiness){
+        } else if (emotion == happiness){
             return Emotion.EMOTION_HAPPINESS;
-        } else if (maxEmotion == fear){
+        } else if (emotion == fear){
             return Emotion.EMOTION_FEAR;
-        } else if (maxEmotion == neutrality){
+        } else if (emotion == neutrality){
             return Emotion.EMOTION_NEUTRALITY;
         }
         return Emotion.EMOTION_ANGER;
