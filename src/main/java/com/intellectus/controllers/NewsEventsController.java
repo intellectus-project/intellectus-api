@@ -3,11 +3,16 @@ package com.intellectus.controllers;
 import com.intellectus.services.newsEvent.NewsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -26,12 +31,15 @@ public class NewsEventsController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
     @GetMapping
-    public ResponseEntity<?> create(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
-                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
+    public ResponseEntity<?> find(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+                                    @RequestParam("page") @Min(0) @Max(9999999) int page,
+                                    @RequestParam("size") @Min(1) @Max(9999) int size) {
+
+        Pageable pageRequest = PageRequest.of(page,size, Sort.by("created").descending());
         try {
-            return ResponseEntity.ok().body(newsEventService.fetchByDate(dateFrom, dateTo));
+            return ResponseEntity.ok().body(newsEventService.fetchByDate(dateFrom, dateTo, pageRequest));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
