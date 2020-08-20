@@ -15,4 +15,6 @@ public class OperatorDto {
     private LocalDateTime callStartTime;
     private EmotionDto primaryEmotion;
     private EmotionDto secondaryEmotion;
+    private String name;
+    private String lastName;
 }
