@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -76,7 +78,7 @@ public class NewsEventService {
         }
     }
 
-    public List<NewsEventDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo) {
-        return newsEventRepository.findAllByCreatedBetweenOrderByCreatedDesc(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+    public Page<NewsEventDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo, Pageable pageable) {
+        return newsEventRepository.findAllByCreatedBetween(pageable, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
     }
 }

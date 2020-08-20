@@ -3,6 +3,8 @@ package com.intellectus.repositories;
 import com.intellectus.controllers.model.NewsEventDto;
 import com.intellectus.model.NewsEvent;
 import org.apache.tomcat.jni.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -19,5 +21,5 @@ public interface NewsEventRepository extends JpaRepository<NewsEvent, Long> {
     @Query("from NewsEvent where url = :url")
     List<NewsEvent> findByUrl(@Param("url") String url);
 
-    List<NewsEventDto> findAllByCreatedBetweenOrderByCreatedDesc(LocalDateTime dateFrom, LocalDateTime dateTo);
+    Page<NewsEventDto> findAllByCreatedBetween(Pageable pageable, LocalDateTime dateFrom, LocalDateTime dateTo);
 }
