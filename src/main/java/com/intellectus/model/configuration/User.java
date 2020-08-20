@@ -1,6 +1,7 @@
 package com.intellectus.model.configuration;
 
 import com.google.common.collect.Sets;
+import com.intellectus.controllers.model.EmotionDto;
 import com.intellectus.controllers.model.OperatorDto;
 import com.intellectus.model.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -112,13 +113,14 @@ public class User extends AuditableEntity {
         return Objects.hash(id, name, lastName, email, phone, username, password, role, active);
     }
 
-    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, Emotion emotion){
+    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, EmotionDto primaryEmotion, EmotionDto secondaryEmotion){
         return OperatorDto.builder()
                 .id(this.id)
                 .username(this.username)
                 .inCall(lastCallStartTime != null)
                 .callStartTime(lastCallStartTime)
-                .actualEmotion(emotion)
+                .primaryEmotion(primaryEmotion)
+                .secondaryEmotion(secondaryEmotion)
                 .name(this.name)
                 .lastName(this.lastName)
                 .build();

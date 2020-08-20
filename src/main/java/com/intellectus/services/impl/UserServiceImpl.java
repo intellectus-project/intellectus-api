@@ -308,7 +308,8 @@ public class UserServiceImpl implements UserService {
         users.forEach(user -> {
             Optional<Stat> stat = statService.lastOperatorStat(user);
             OperatorDto dto = user.toOperatorDto(callService.actualOperatorCall(user) != null ? callService.actualOperatorCall(user).getStartTime() : null,
-                                                 stat.map(Stat::getPrimaryEmotion).orElse(null));
+                                                 stat.map(Stat::getPrimaryEmotion).orElse(null),
+                                                 stat.map(Stat::getSecondaryEmotion).orElse(null));
             operators.add(dto);
         });
         return operators;
