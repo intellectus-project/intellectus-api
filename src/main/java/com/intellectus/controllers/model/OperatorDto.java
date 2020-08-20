@@ -14,4 +14,6 @@ public class OperatorDto {
     private Boolean inCall;
     private LocalDateTime callStartTime;
     private Emotion actualEmotion;
+    private String name;
+    private String lastName;
 }

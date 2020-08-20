@@ -119,6 +119,8 @@ public class User extends AuditableEntity {
                 .inCall(lastCallStartTime != null)
                 .callStartTime(lastCallStartTime)
                 .actualEmotion(emotion)
+                .name(this.name)
+                .lastName(this.lastName)
                 .build();
     }
 }
