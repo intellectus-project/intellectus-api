@@ -119,6 +119,11 @@ public class UserServiceImpl implements UserService {
         if (shiftId != null)
              shift = shiftService.findById(shiftId);
 
+        Long supervisorId = userResponse.getSupervisorId();
+        User supervisor = null;
+        if (supervisorId != null)
+            supervisor = this.findById(supervisorId);
+
         Role role = roleRepository.findByCode(userResponse.getRole());
         user.setName(userResponse.getName());
         user.setLastName(userResponse.getLastName());
@@ -128,6 +133,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setUsername(userResponse.getUsername());
         user.setShift(shift.isPresent() ? shift.get() : user.getShift());
+        user.setSupervisor(supervisor != null ? supervisor : user.getSupervisor());
         return repository.save(user);
     }
 
@@ -214,10 +220,22 @@ public class UserServiceImpl implements UserService {
             log.warn("Username already exists");
             return Optional.empty();
         }
+        Optional<Shift> shift = null;
+        if(updates.containsKey("shiftId")) {
+            shift = shiftService.findById(Long.valueOf(updates.get("shiftId").toString()));
+        }
+
+        User supervisor = null;
+        if(updates.containsKey("supervisorId")) {
+            supervisor = this.findById(Long.valueOf(updates.get("supervisorId").toString()));
+        }
+
         updates = parseUpdatesForUser(updates);
         updateUser = new ObjectMapper().convertValue(updates, User.class);
         if(role != null) updateUser.setRole(role);
-        if(password.isPresent())updateUser.setPassword(password.get());
+        if(password.isPresent()) updateUser.setPassword(password.get());
+        if (shift.isPresent()) updateUser.setShift(shift.get());
+        if (supervisor != null) updateUser.setSupervisor(supervisor);
 
         try {
             third = com.intellectus.utils.ObjectMapper.mergeObjects(updateUser,existentUser);
@@ -235,6 +253,8 @@ public class UserServiceImpl implements UserService {
         updates.remove(role_code_frontend);
         updates.remove("newPassword");
         updates.remove("confirmNewPassword");
+        updates.remove("shiftId");
+        updates.remove("supervisorId");
         return updates;
     }
 
