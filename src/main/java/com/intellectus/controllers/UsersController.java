@@ -194,4 +194,11 @@ public class UsersController {
         }
         return ResponseEntity.ok().body("assigned.");
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/supervisors")
+    public ResponseEntity<?> getSupervisors(@AuthenticationPrincipal UserPrincipal user)
+    {
+        return ResponseEntity.ok().body(service.getSupervisors());
+    }
 }
