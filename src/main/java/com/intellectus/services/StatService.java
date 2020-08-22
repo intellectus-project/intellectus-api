@@ -45,4 +45,8 @@ public class StatService {
                 : statRepository.findStatsGroupedByDateBetween(df, dt);
     }
 
+    public List<Stat> getByOperatorAndDate(User operator, LocalDate date){
+        return statRepository.findAllByOperatorAndDate(operator.getId(), date);
+    }
+
 }

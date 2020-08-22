@@ -8,6 +8,7 @@ import com.intellectus.services.filters.FilterUserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public interface UserService {
@@ -45,4 +46,6 @@ public interface UserService {
     List<User> getSupervisors();
 
     StatDto getOperatorEmotionStatus(User operator);
+
+    EmotionTablesDto getEmotionTables(User operator, LocalDate date);
 }

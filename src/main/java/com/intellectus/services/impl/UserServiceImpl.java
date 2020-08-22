@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -372,5 +374,18 @@ public class UserServiceImpl implements UserService {
                       .happiness(stat.getHappiness())
                       .neutrality(stat.getNeutrality())
                       .build();
+    }
+
+    public EmotionTablesDto getEmotionTables(User operator, LocalDate date){
+        List<Stat> stats = statService.getByOperatorAndDate(operator, date);
+        EmotionTablesDto dto = new EmotionTablesDto();
+        stats.forEach(stat -> {
+            dto.addAnger(stat.getAnger());
+            dto.addFear(stat.getFear());
+            dto.addHappiness(stat.getHappiness());
+            dto.addSadness(stat.getSadness());
+            dto.addNeutrality(stat.getNeutrality());
+        });
+        return dto;
     }
 }
