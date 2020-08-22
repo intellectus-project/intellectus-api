@@ -25,4 +25,10 @@ public interface CallRepository extends CrudRepository<Call, Long> {
 
     List<Call> findAllByUser_Supervisor_IdAndStartTimeBetween(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
 
+    @Query(value = "select * from calls c " +
+            "where c.id_user = :id AND end_time iS NOT NULL " +
+            "order by c.created desc " +
+            "limit 1",
+            nativeQuery = true)
+    Call findLastByOperator(@Param("id") Long id);
 }

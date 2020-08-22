@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -197,8 +199,26 @@ public class UsersController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/supervisors")
-    public ResponseEntity<?> getSupervisors(@AuthenticationPrincipal UserPrincipal user)
-    {
+    public ResponseEntity<?> getSupervisors(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok().body(service.getSupervisors());
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISOR', 'ROLE_OPERATOR')")
+    @GetMapping("/operatorEmotionStatus")
+    public ResponseEntity<?> getOperatorEmotionStatus(@AuthenticationPrincipal UserPrincipal operator,
+                                                      @RequestParam Optional<Long> operatorId)
+    {
+        User user = operatorId.isPresent() ? service.findById(operatorId.get()) : service.findById(operator.getId());
+        return ResponseEntity.ok().body(service.getOperatorEmotionStatus(user));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISOR', 'ROLE_OPERATOR')")
+    @GetMapping("/operatorEmotionTables")
+    public ResponseEntity<?> getOperatorEmotionTables(@AuthenticationPrincipal UserPrincipal operator,
+                                                      @RequestParam Optional<Long> operatorId,
+                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date)
+    {
+        User user = operatorId.isPresent() ? service.findById(operatorId.get()) : service.findById(operator.getId());
+        return ResponseEntity.ok().body(service.getEmotionTables(user, date));
     }
 }

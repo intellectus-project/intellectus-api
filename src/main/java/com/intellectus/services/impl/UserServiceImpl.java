@@ -2,11 +2,13 @@ package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
+import com.intellectus.model.Call;
 import com.intellectus.model.Shift;
 import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.Emotion;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
 import com.intellectus.services.CallService;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -355,5 +359,33 @@ public class UserServiceImpl implements UserService {
     public List<User> getSupervisors() {
         Role role = roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role());
         return repository.findAllByRole(role);
+    }
+
+    public StatDto getOperatorEmotionStatus(User operator) {
+        Optional<Stat> opStat = statService.lastOperatorStat(operator);
+        if(!opStat.isPresent()) {
+            return StatDto.builder().build();
+        }
+        Stat stat = opStat.get();
+        return StatDto.builder()
+                      .sadness(stat.getSadness())
+                      .anger(stat.getAnger())
+                      .fear(stat.getFear())
+                      .happiness(stat.getHappiness())
+                      .neutrality(stat.getNeutrality())
+                      .build();
+    }
+
+    public EmotionTablesDto getEmotionTables(User operator, LocalDate date){
+        List<Stat> stats = statService.getByOperatorAndDate(operator, date);
+        EmotionTablesDto dto = new EmotionTablesDto();
+        stats.forEach(stat -> {
+            dto.addAnger(stat.getAnger());
+            dto.addFear(stat.getFear());
+            dto.addHappiness(stat.getHappiness());
+            dto.addSadness(stat.getSadness());
+            dto.addNeutrality(stat.getNeutrality());
+        });
+        return dto;
     }
 }

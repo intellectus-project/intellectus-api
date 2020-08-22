@@ -53,5 +53,13 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
             "and s.call.startTime <= :dateTo " +
             "group by  s.call.occurrenceDay")
     List<BarsChartDto> findStatsGroupedByDateBetween(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
+
+    @Query(value = "select * from stats s " +
+            "join calls c ON c.id = id_call " +
+            "where c.id_user = :id AND speaker_type = 'SPEAKER_TYPE_OPERATOR' " +
+            "AND c.occurrence_day = :date " +
+            "order by c.created asc ",
+            nativeQuery = true)
+    List<Stat> findAllByOperatorAndDate(@Param("id") Long id, @Param("date") LocalDate date);
 }
 

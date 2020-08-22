@@ -1,16 +1,14 @@
 package com.intellectus.services.impl;
 
-import com.intellectus.controllers.model.MenuDto;
-import com.intellectus.controllers.model.OperatorDto;
-import com.intellectus.controllers.model.UserEditRequest;
+import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.ExistUserException;
 import com.intellectus.exceptions.InactiveUserException;
-import com.intellectus.controllers.model.AuthenticatedUserDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.services.filters.FilterUserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public interface UserService {
@@ -46,4 +44,8 @@ public interface UserService {
     void assignSupervisorToOperator(User supervisor, Long operatorId);
 
     List<User> getSupervisors();
+
+    StatDto getOperatorEmotionStatus(User operator);
+
+    EmotionTablesDto getEmotionTables(User operator, LocalDate date);
 }
