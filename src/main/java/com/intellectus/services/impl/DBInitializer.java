@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -358,26 +359,23 @@ public class DBInitializer implements CommandLineRunner {
 
     private void calls() {
         LocalDateTime date = LocalDateTime.now().minusDays(2);
-        User lucas = userService.findByUsername("lucas@intellectus.com").get();
-        User ronan = userService.findByUsername("ronan@intellectus.com").get();
-        User eric = userService.findByUsername("eric@intellectus.com").get();
-        for (int i = 0; i < 5; i++) {
-            createCall(lucas, date, i);
-            createCall(ronan, date, i);
-            createCall(eric, date, i);
-        }
-        date = date.plusDays(1);
-        for (int i = 0; i < 5; i++) {
-            createCall(lucas, date, i);
-            createCall(ronan, date, i);
-            createCall(eric, date, i);
-        }
-        date = date.plusDays(1);
-        for (int i = 0; i < 5; i++) {
-            createCall(lucas, date, i);
-            createCall(ronan, date, i);
-            createCall(eric, date, i);
+        List<User> users = new ArrayList<>();
+        users.add(userService.findByUsername("lucas@intellectus.com").get());
+        users.add(userService.findByUsername("ronan@intellectus.com").get());
+        users.add(userService.findByUsername("eric@intellectus.com").get());
 
+        createCalls(users, date);
+        createCalls(users, date.plusDays(1));
+        createCalls(users, date.plusDays(2));
+    }
+
+    private void createCalls(List<User> users, LocalDateTime date){
+        if (callService.fetchByDay(date.toLocalDate()).size() > 3) return;
+        for (int i = 0; i < 5; i++) {
+            int finalI = i;
+            users.forEach(user -> {
+                createCall(user, date, finalI);
+            });
         }
     }
 
