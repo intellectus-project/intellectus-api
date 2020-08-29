@@ -26,4 +26,6 @@ public enum Emotion {
                 .filter(EmotionEnum -> EmotionEnum.id == value)
                 .findFirst();
     }
+
+
 }

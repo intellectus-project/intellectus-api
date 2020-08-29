@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Long shiftId = userResponse.getShiftId();
-        Optional<Shift> shift = null;
+        Optional<Shift> shift = Optional.empty();
         if (shiftId != null)
              shift = shiftService.findById(shiftId);
 
