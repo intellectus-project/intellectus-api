@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.intellectus.services.impl.UserServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class CallService {
         return callRepository.findActualByOperator(operator.getId());
     }
 
-    public Collection<CallInfoDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
+    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
         List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetween(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
         List<CallInfoDto> dtos = calls
                 .stream()
@@ -90,6 +91,10 @@ public class CallService {
             callInfoDto.setWeather(weatherService.getWeatherAt(callInfoDto.getStartTime()));
         });
         return dtos;
+    }
+
+    public List<Call> fetchByDay(LocalDate date) {
+        return callRepository.findAllByStartTimeBetween(date.atStartOfDay(), date.atTime(LocalTime.MAX));
     }
 
     public Optional<Call> findById(Long id) {

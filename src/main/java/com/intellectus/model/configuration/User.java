@@ -69,9 +69,6 @@ public class User extends AuditableEntity {
     @ManyToOne
     private Shift shift;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<Call> calls = Sets.newHashSet();
-
     public User() {
         this.active = true;
     }

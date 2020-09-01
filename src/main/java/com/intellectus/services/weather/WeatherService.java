@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -21,6 +22,16 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 public class WeatherService {
+
+    public String[] DESCRIPTION_EXAMPLES = {
+        "Niebla",
+        "Nubes rotas",
+        "Nubes",
+        "Cielo claro",
+        "Algo de nubes",
+        "Bruma",
+        "Nubes dispersas"
+    };
 
     @Value("${openWeather.baseUrl}")
     private String BASE_URL;
@@ -63,7 +74,7 @@ public class WeatherService {
             Double temp = kelvinToCelsius(jsonResponse.getJSONObject("main").getDouble("temp"));
             String description = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("description");
             LocalDateTime now = LocalDateTime.now();
-            Weather weather = new Weather(description, temp, now);
+            Weather weather = new Weather(capitalize(description), temp, now);
             weatherRepository.save(weather);
         } catch (Exception e) {
             log.error(e.getStackTrace().toString());
@@ -77,6 +88,10 @@ public class WeatherService {
 
     private Double kelvinToCelsius(Double kelvin){
         return kelvin - 273.15;
+    }
+
+    private String capitalize(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }
 

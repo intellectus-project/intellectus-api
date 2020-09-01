@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 public class CallRequestPatchDto {
     @NotNull
     private LocalDateTime endTime;
