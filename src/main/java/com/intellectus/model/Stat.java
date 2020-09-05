@@ -4,6 +4,7 @@ import com.intellectus.controllers.model.EmotionDto;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.model.constants.Emotion;
 
+import com.intellectus.utils.NumberUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,11 +40,11 @@ public class Stat {
     public Stat() {}
 
     public Stat(double sadness, double happiness, double fear, double neutrality, double anger, Call call, SpeakerType speakerType){
-        this.sadness = sadness;
-        this.happiness = happiness;
-        this.fear = fear;
-        this.neutrality = neutrality;
-        this.anger = anger;
+        this.sadness = NumberUtils.roundDouble(sadness);
+        this.happiness = NumberUtils.roundDouble(happiness);
+        this.fear = NumberUtils.roundDouble(fear);
+        this.neutrality = NumberUtils.roundDouble(neutrality);
+        this.anger = NumberUtils.roundDouble(anger);
         this.call = call;
         this.speakerType = speakerType;
     }
