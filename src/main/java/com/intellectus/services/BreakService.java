@@ -40,5 +40,7 @@ public class BreakService {
     }
 
     public Optional<Break> findById(Long id) { return breakRepository.findById(id); }
+
+    public Optional<Break> findByCall(Call call) { return breakRepository.findByCall(call); }
 }
 

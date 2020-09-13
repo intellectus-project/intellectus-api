@@ -1,6 +1,7 @@
 package com.intellectus.repositories;
 
 import com.intellectus.controllers.model.CallInfoDto;
+import com.intellectus.controllers.model.CallViewDto;
 import com.intellectus.model.Call;
 import com.intellectus.model.configuration.User;
 import org.springframework.data.jpa.repository.Query;

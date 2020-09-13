@@ -4,6 +4,7 @@ import com.intellectus.controllers.model.BarsChartDto;
 import com.intellectus.model.Call;
 import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.User;
+import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.StatRepository;
 import com.intellectus.utils.NumberUtils;
 import org.apache.tomcat.jni.Local;
@@ -68,6 +69,10 @@ public class StatService {
 
     public List<Stat> getByOperatorAndDate(User operator, LocalDate date){
         return statRepository.findAllByOperatorAndDate(operator.getId(), date);
+    }
+
+    public Stat findByCallAndSpeakerType(Call call, SpeakerType speakerType) {
+        return statRepository.findByCallAndSpeakerType(call, speakerType);
     }
 
 }

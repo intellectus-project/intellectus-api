@@ -2,8 +2,10 @@ package com.intellectus.services;
 
 import com.intellectus.controllers.model.*;
 
+import com.intellectus.model.Break;
 import com.intellectus.model.Call;
 import com.intellectus.model.Stat;
+import com.intellectus.model.Weather;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
@@ -27,16 +29,19 @@ public class CallService {
     @Autowired
     public CallService(CallRepository callRepository,
                        StatService statService,
-                       WeatherService weatherService){
+                       WeatherService weatherService,
+                       BreakService breakService){
 
         this.callRepository = callRepository;
         this.statService = statService;
         this.weatherService = weatherService;
+        this.breakService = breakService;
     }
 
     private CallRepository callRepository;
     private StatService statService;
     private WeatherService weatherService;
+    private BreakService breakService;
 
     public Long create(User user, CallRequestPostDto callDto) {
         Call call = new Call(user, callDto.getStartTime(), callDto.getStartTime().toLocalDate());
@@ -99,6 +104,25 @@ public class CallService {
 
     public Optional<Call> findById(Long id) {
         return callRepository.findById(id);
+    }
+
+    public CallViewDto findByIdWithInfo(Long id) {
+        Call call = findById(id).get();
+        Stat operatorStat = statService.findByCallAndSpeakerType(call, SpeakerType.SPEAKER_TYPE_OPERATOR);
+        Stat consultantStat = statService.findByCallAndSpeakerType(call, SpeakerType.SPEAKER_TYPE_CONSULTANT);
+        Weather weather = weatherService.getWeatherAt(call.getStartTime());
+        Optional<Break> breakOpt = breakService.findByCall(call);
+        return CallViewDto.builder()
+                   .consultantStats(consultantStat.toDto())
+                   .operatorStats(operatorStat.toDto())
+                   .emotion(call.getEmotion())
+                   .operatorBreak(breakOpt)
+                   .startTime(call.getStartTime())
+                   .endTime(call.getEndTime())
+                   .weather(weather)
+                   .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))
+                   .build();
+
     }
 
     public Call lastOperatorCall(User operator) {

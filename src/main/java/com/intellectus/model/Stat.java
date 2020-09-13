@@ -1,6 +1,7 @@
 package com.intellectus.model;
 
 import com.intellectus.controllers.model.EmotionDto;
+import com.intellectus.controllers.model.StatDto;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.model.constants.Emotion;
 
@@ -73,4 +74,16 @@ public class Stat {
         }
         return Emotion.EMOTION_ANGER;
     }
+
+    public StatDto toDto() {
+        return StatDto.builder()
+                      .neutrality(this.neutrality)
+                      .happiness(this.happiness)
+                      .fear(this.fear)
+                      .anger(this.anger)
+                      .sadness(this.sadness)
+                      .build();
+
+    }
+
 }
