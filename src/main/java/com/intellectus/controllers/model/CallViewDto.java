@@ -15,7 +15,6 @@ import java.util.Optional;
 @Builder
 @Setter
 public class CallViewDto {
-    private Optional<Break> operatorBreak;
     private StatDto operatorStats;
     private StatDto consultantStats;
     private Emotion emotion;
@@ -24,4 +23,6 @@ public class CallViewDto {
     private Weather weather;
     private Shift shift;
     private ReducedUserInfoDto operator;
+    private boolean breakTaken;
+    private int breakDurationMinutes;
 }

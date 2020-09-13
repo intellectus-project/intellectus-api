@@ -25,8 +25,8 @@ public class BreakService {
 
     private BreakRepository breakRepository;
 
-    public void create(Call call) {
-        Break breakInstance = new Break(call);
+    public void create(Call call, int minutesDuration) {
+        Break breakInstance = new Break(call, minutesDuration);
         breakRepository.save(breakInstance);
     }
 

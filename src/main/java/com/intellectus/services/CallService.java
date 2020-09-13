@@ -116,11 +116,13 @@ public class CallService {
                    .consultantStats(consultantStat.toDto())
                    .operatorStats(operatorStat.toDto())
                    .emotion(call.getEmotion())
-                   .operatorBreak(breakOpt)
                    .startTime(call.getStartTime())
                    .endTime(call.getEndTime())
                    .weather(weather)
+                   .shift(call.getUser().getShift())
                    .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))
+                   .breakDurationMinutes(breakOpt.isPresent() ? breakOpt.get().getMinutesDuration() : null)
+                   .breakTaken(breakOpt.isPresent())
                    .build();
 
     }
