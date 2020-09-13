@@ -5,6 +5,7 @@ import com.intellectus.model.Call;
 import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
+import com.intellectus.model.constants.SpeakerType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -67,6 +68,8 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
             "order by c.created asc ",
             nativeQuery = true)
     List<Stat> findAllByOperatorAndDate(@Param("id") Long id, @Param("date") LocalDate date);
+
+    Stat findByCallAndSpeakerType(Call call, SpeakerType speakerType);
 
     interface BarsChart {
         double getSadness();

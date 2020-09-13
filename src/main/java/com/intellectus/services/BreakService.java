@@ -25,8 +25,8 @@ public class BreakService {
 
     private BreakRepository breakRepository;
 
-    public void create(Call call) {
-        Break breakInstance = new Break(call);
+    public void create(Call call, int minutesDuration) {
+        Break breakInstance = new Break(call, minutesDuration);
         breakRepository.save(breakInstance);
     }
 
@@ -40,5 +40,7 @@ public class BreakService {
     }
 
     public Optional<Break> findById(Long id) { return breakRepository.findById(id); }
+
+    public Optional<Break> findByCall(Call call) { return breakRepository.findByCall(call); }
 }
 

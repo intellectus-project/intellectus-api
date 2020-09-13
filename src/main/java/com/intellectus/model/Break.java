@@ -27,11 +27,15 @@ public class Break extends AuditableEntity {
 
     private LocalDateTime created;
 
+    @Column(columnDefinition = "int default 10")
+    private int minutesDuration;
+
     public Break() {}
 
-    public Break(Call call) {
+    public Break(Call call, int minutesDuration) {
         this.call = call;
         this.user = call.getUser();
+        this.minutesDuration = minutesDuration;
     }
 
 }

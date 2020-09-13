@@ -42,12 +42,12 @@ public class BreaksController {
 
     @PreAuthorize("hasRole('ROLE_OPERATOR')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestParam @Min(1) Long callId) {
+    public ResponseEntity<?> create(@RequestParam @Min(1) Long callId, @RequestParam Integer minutesDuration) {
         try {
             Optional<Call> call = callService.findById(callId);
             if(!call.isPresent())
                 return ResponseEntity.badRequest().body("Call not found");
-            breakService.create(call.get());
+            breakService.create(call.get(), minutesDuration == null ? 10 : minutesDuration);
             return ResponseEntity.ok().body("created");
 
         } catch (Exception e) {

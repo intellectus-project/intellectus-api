@@ -2,6 +2,7 @@ package com.intellectus.repositories;
 
 import com.intellectus.controllers.model.BreakDto;
 import com.intellectus.model.Break;
+import com.intellectus.model.Call;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BreakRepository extends JpaRepository<Break, Long> {
@@ -17,4 +19,6 @@ public interface BreakRepository extends JpaRepository<Break, Long> {
             nativeQuery = true)
     List<Break> findAllByUserBetweenDate(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo,
                                             @Param("idUser") Long idUser);
+
+    Optional<Break> findByCall(Call call);
 }

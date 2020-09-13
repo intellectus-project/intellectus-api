@@ -67,4 +67,14 @@ public class CallsController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_OPERATOR') || hasRole('ROLE_SUPERVISOR')")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> find(@PathVariable @Min(1) Long id) {
+        try {
+            return ResponseEntity.ok().body(callService.findByIdWithInfo(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
