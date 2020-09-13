@@ -21,6 +21,20 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
     @Query("from Stat s inner join Call c on s.call = c where c.startTime  >=  :dateFrom and c.startTime <= :dateTo")
     List<Stat> findStatsFromCallsBetweenDate(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
 
+    @Query(value = "select avg(s.sadness) sadness, " +
+            " avg(s.happiness) happiness," +
+            " avg(s.fear) fear," +
+            " avg(s.neutrality) neutrality," +
+            " to_char(DATE_TRUNC(:dateGroup, c.occurrence_day), 'YYYY/MM/DD') occurrenceDayTrunc " +
+            "from stats s " +
+            "join calls c ON c.id = s.id_call " +
+            "where c.start_time >= :dateFrom " +
+            "and c.start_time <= :dateTo " +
+            "and s.speaker_type = 'SPEAKER_TYPE_CONSULTANT' " +
+            "group by occurrenceDayTrunc " +
+            "order by occurrenceDayTrunc ", nativeQuery = true)
+    List<BarsChart> findStatsGroupedByDateBetween(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo, @Param("dateGroup") String dateGroup);
+
     @Query(value = "select * from stats s " +
             "join calls c ON c.id = id_call " +
             "where c.id_user = :id AND speaker_type = 'SPEAKER_TYPE_OPERATOR'" +
@@ -29,30 +43,22 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
           nativeQuery = true)
     Optional<Stat> findLastByOperator(@Param("id") Long id);
 
-    @Query("select new com.intellectus.controllers.model.BarsChartDto( avg(s.sadness), " +
-            " avg(s.happiness)," +
-            " avg(s.fear)," +
-            " avg(s.neutrality)," +
-            " avg(s.anger)," +
-            " s.call.occurrenceDay ) " +
-            "from Stat s " +
-            "where s.call.user = :user " +
-            "and s.call.startTime >= :dateFrom " +
-            "and s.call.startTime <= :dateTo " +
-            "group by  s.call.occurrenceDay")
-    List<BarsChartDto> findStatsForUserGroupedByDateBetween(@Param("user") User user, @Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
 
-    @Query("select new com.intellectus.controllers.model.BarsChartDto( avg(s.sadness), " +
-            " avg(s.happiness)," +
-            " avg(s.fear)," +
-            " avg(s.neutrality)," +
-            " avg(s.anger)," +
-            " s.call.occurrenceDay ) " +
-            "from Stat s " +
-            "where s.call.startTime >= :dateFrom " +
-            "and s.call.startTime <= :dateTo " +
-            "group by  s.call.occurrenceDay")
-    List<BarsChartDto> findStatsGroupedByDateBetween(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
+    @Query(value = "select avg(s.sadness) sadness, " +
+            " avg(s.happiness) happiness," +
+            " avg(s.fear) fear," +
+            " avg(s.neutrality) neutrality," +
+            " to_char(DATE_TRUNC(:dateGroup, c.occurrence_day), 'YYYY/MM/DD') occurrenceDayTrunc " +
+            "from stats s " +
+            "join calls c ON c.id = s.id_call " +
+            "where c.start_time >= :dateFrom " +
+            "and c.start_time <= :dateTo " +
+            "and s.speaker_type = 'SPEAKER_TYPE_CONSULTANT' " +
+            "and c.id_user = :userId " +
+            "group by occurrenceDayTrunc " +
+            "order by occurrenceDayTrunc ", nativeQuery = true)
+    List<BarsChart> findStatsForUserGroupedByDateBetween(@Param("userId") Long userId, @Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo,
+                                                            @Param("dateGroup") String dateGroup);
 
     @Query(value = "select * from stats s " +
             "join calls c ON c.id = id_call " +
@@ -61,5 +67,13 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
             "order by c.created asc ",
             nativeQuery = true)
     List<Stat> findAllByOperatorAndDate(@Param("id") Long id, @Param("date") LocalDate date);
+
+    interface BarsChart {
+        double getSadness();
+        double getHappiness();
+        double getFear();
+        double getNeutrality();
+        String getOccurrenceDayTrunc();
+    }
 }
 
