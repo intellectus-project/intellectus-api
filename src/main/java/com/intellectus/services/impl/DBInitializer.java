@@ -19,6 +19,7 @@ import com.google.common.collect.Sets;
 import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.StatService;
+import com.intellectus.services.WeatherImageService;
 import com.intellectus.services.newsEvent.NewsEventService;
 import com.intellectus.services.weather.WeatherService;
 import com.intellectus.utils.DbInitializerUtils;
@@ -84,7 +85,10 @@ public class DBInitializer implements CommandLineRunner {
     private BreakService breakService;
 
     @Autowired
-    private WeatherService  weatherService;
+    private WeatherService weatherService;
+
+    @Autowired
+    private WeatherImageService weatherImageService;
 
     private String SHIFT_MAÑANA = "Mañana";
     private String SHIFT_TARDE = "Tarde";
@@ -97,6 +101,7 @@ public class DBInitializer implements CommandLineRunner {
         menusAndPermissions();
         newsEvents();
         weathers();
+        weatherImages();
         shifts();
         users();
         calls();
@@ -218,6 +223,21 @@ public class DBInitializer implements CommandLineRunner {
             }
 
         }
+    }
+
+    private void weatherImages() {
+        weatherImageService.create("Niebla", "niebla.png");
+        weatherImageService.create("Llovizna ligera", "lluvia.png");
+        weatherImageService.create("Nubes", "nube.png");
+        weatherImageService.create("Nubes rotas", "nube.png");
+        weatherImageService.create("Lluvia ligera", "lluvia.png");
+        weatherImageService.create("Cielo claro", "soleado.png", 7, 18);
+        weatherImageService.create("Cielo claro", "moon.png", 19, 6);
+        weatherImageService.create("Algo de nubes", "parcialmentenublado.png", 7, 18);
+        weatherImageService.create("Algo de nubes", "cloudmoon.png", 19, 6);
+        weatherImageService.create("Bruma" , "niebla.png");
+        weatherImageService.create("Nubes dispersas", "parcialmentenublado.png", 7, 18);
+        weatherImageService.create("Nubes dispersas", "cloudmoon.png", 19, 6);
     }
 
     private void shifts() {
