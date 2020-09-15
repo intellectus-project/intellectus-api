@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class WeatherDto {
-
-    private String  description;
-    private double temperature;
-    private LocalDateTime time;
+    private String description;
+    private double currentTemperature;
+    private double minTemperature;
+    private double maxTemperature;
+    private String image;
 }

@@ -1,6 +1,7 @@
 package com.intellectus.model;
 
 import com.intellectus.model.configuration.Role;
+import com.intellectus.utils.NumberUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,5 +28,9 @@ public class Weather {
         this.description = description;
         this.temperature = temperature;
         this.time = time;
+    }
+
+    public double getRoundedTemperature() {
+        return (int) Math.round(this.temperature);
     }
 }
