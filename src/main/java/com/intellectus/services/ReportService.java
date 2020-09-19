@@ -6,12 +6,16 @@ import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.Role;
+import com.intellectus.repositories.StatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.intellectus.services.impl.UserServiceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -74,5 +78,11 @@ public class ReportService {
             if(!user.get().getRole().getCode().equals(Role.ROLE_OPERATOR.role())) throw new RuntimeException("The specified user id must correspond to a supervisor");
         }
         return statService.getStatsBetween(user, dateFrom, dateTo);
+    }
+
+    public List<BarsChartDto> getBarsChartByOperators(LocalDate date, Long supervisorId) {
+        LocalDateTime df = date.atStartOfDay();
+        LocalDateTime dt = date.atTime(LocalTime.MAX);
+        return statService.findStatsGroupedByUser(supervisorId, df, dt);
     }
 }

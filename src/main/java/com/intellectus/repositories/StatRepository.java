@@ -71,12 +71,28 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
 
     Stat findByCallAndSpeakerType(Call call, SpeakerType speakerType);
 
+    @Query(value = "select avg(s.sadness) sadness, " +
+            " avg(s.happiness) happiness," +
+            " avg(s.fear) fear," +
+            " avg(s.neutrality) neutrality," +
+            " c.id_user idUser " +
+            "from stats s " +
+            "join calls c ON c.id = s.id_call " +
+            "join users u ON u.id = c.id_user " +
+            "where c.start_time >= :dateFrom " +
+            "and c.start_time <= :dateTo " +
+            "and s.speaker_type = 'SPEAKER_TYPE_OPERATOR' " +
+            "and u.id_supervisor = :supervisorId " +
+            "group by c.id_user", nativeQuery = true)
+    List<BarsChart> findStatsForGroupedByOperators(@Param("supervisorId") Long supervisorId, @Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
+
     interface BarsChart {
         double getSadness();
         double getHappiness();
         double getFear();
         double getNeutrality();
         String getOccurrenceDayTrunc();
+        Long getIdUser();
     }
 }
 
