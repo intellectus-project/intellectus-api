@@ -5,17 +5,22 @@ import com.intellectus.controllers.model.BarsChartDto;
 import com.intellectus.controllers.model.RingsChartDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Role;
+import com.intellectus.security.UserPrincipal;
 import com.intellectus.services.CallService;
 import com.intellectus.services.ReportService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,8 +70,21 @@ public class ReportsController {
         }catch (RuntimeException rex){
             return ResponseEntity.badRequest().body(rex.getMessage());
         }
+        return ResponseEntity.ok().body(barsChartDtoList);
+    }
 
-
+    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
+    @GetMapping("/barsChartByOperators")
+    public ResponseEntity<?> getBarsChartByOperators(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date,
+                                          @AuthenticationPrincipal UserPrincipal supervisor)
+    {
+        List<BarsChartDto> barsChartDtoList;
+        try {
+            LocalDate actualDate = date.orElse(LocalDate.now());
+            barsChartDtoList = reportService.getBarsChartByOperators(actualDate, supervisor.getId());
+        } catch (Exception ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
         return ResponseEntity.ok().body(barsChartDtoList);
     }
 

@@ -6,6 +6,8 @@ import com.intellectus.model.Stat;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.StatRepository;
+import com.intellectus.services.impl.UserService;
+import com.intellectus.services.impl.UserServiceImpl;
 import com.intellectus.utils.NumberUtils;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,13 @@ import java.util.stream.Collectors;
 public class StatService {
 
     @Autowired
-    public StatService(StatRepository statRepository){
+    public StatService(StatRepository statRepository, UserServiceImpl userService){
         this.statRepository = statRepository;
+        this.userService = userService;
     }
 
     private StatRepository statRepository;
+    private UserServiceImpl userService;
 
     public List<Stat> getStatsBetweenDates(LocalDate dateFrom, LocalDate dateTo){
         return statRepository.findStatsFromCallsBetweenDate(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
@@ -63,7 +67,8 @@ public class StatService {
                         elem.getHappiness(),
                         elem.getFear(),
                         elem.getNeutrality(),
-                        elem.getOccurrenceDayTrunc()
+                        elem.getOccurrenceDayTrunc(),
+                        null
                 )).collect(Collectors.toList());
     }
 
@@ -73,6 +78,18 @@ public class StatService {
 
     public Stat findByCallAndSpeakerType(Call call, SpeakerType speakerType) {
         return statRepository.findByCallAndSpeakerType(call, speakerType);
+    }
+
+    public List<BarsChartDto> findStatsGroupedByUser(Long supervisorId, LocalDateTime df, LocalDateTime dt) {
+        List<StatRepository.BarsChart> barsCharts = statRepository.findStatsForGroupedByOperators(supervisorId, df, dt);
+        return barsCharts.stream().map(elem ->
+                new BarsChartDto(elem.getSadness(),
+                        elem.getHappiness(),
+                        elem.getFear(),
+                        elem.getNeutrality(),
+                        elem.getOccurrenceDayTrunc(),
+                        Optional.of(userService.findById(elem.getIdUser()))
+                        )).collect(Collectors.toList());
     }
 
 }
