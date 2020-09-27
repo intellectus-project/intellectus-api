@@ -13,4 +13,10 @@ import java.time.LocalDateTime;
 public class CallRequestPostDto {
     @NotNull
     private LocalDateTime startTime;
+
+    public CallRequestPostDto() {}
+
+    public CallRequestPostDto(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
 }

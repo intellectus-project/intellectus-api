@@ -45,7 +45,7 @@ public interface UserService {
 
     List<User> getSupervisors();
 
-    StatDto getOperatorEmotionStatus(User operator);
+    EmotionStatusDto getOperatorEmotionStatus(User operator);
 
     EmotionTablesDto getEmotionTables(User operator, LocalDate date);
 }

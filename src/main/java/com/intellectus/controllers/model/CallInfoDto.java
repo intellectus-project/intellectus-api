@@ -17,4 +17,5 @@ public class CallInfoDto  {
     private Weather weather;
     private Shift shift;
     private ReducedUserInfoDto operator;
+    private Long id;
 }

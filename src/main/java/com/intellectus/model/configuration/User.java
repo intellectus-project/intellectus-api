@@ -110,7 +110,8 @@ public class User extends AuditableEntity {
         return Objects.hash(id, name, lastName, email, phone, username, password, role, active);
     }
 
-    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, EmotionDto primaryEmotion, EmotionDto secondaryEmotion){
+    public OperatorDto toOperatorDto(LocalDateTime lastCallStartTime, EmotionDto primaryEmotion, EmotionDto secondaryEmotion,
+                                     boolean atBreak, boolean breakAssigned){
         return OperatorDto.builder()
                 .id(this.id)
                 .username(this.username)
@@ -120,6 +121,8 @@ public class User extends AuditableEntity {
                 .secondaryEmotion(secondaryEmotion)
                 .name(this.name)
                 .lastName(this.lastName)
+                .atBreak(atBreak)
+                .breakAssignedToActualCall(breakAssigned)
                 .build();
     }
 }

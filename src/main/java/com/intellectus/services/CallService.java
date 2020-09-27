@@ -57,8 +57,13 @@ public class CallService {
         call.setEndTime(callDto.getEndTime());
         //todo: handle inexistent emotion exception
         call.setEmotion(Emotion.valueOf(callDto.getEmotion()).get());
-
         callRepository.save(call);
+
+        Optional<Break> breakOpt = breakService.findByCall(call);
+        breakOpt.ifPresent(breakObj -> {
+            breakObj.setActive(true);
+            breakService.save(breakObj);
+        });
 
         StatDto consultantDto = callDto.getConsultantStats();
         Stat consultantStats = new Stat(consultantDto.getSadness(),
@@ -129,5 +134,13 @@ public class CallService {
 
     public Call lastOperatorCall(User operator) {
         return callRepository.findLastByOperator(operator.getId());
+    }
+
+    public List<CallInfoDto> fetchByDateAndOperator(LocalDate date, Long id){
+        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDay(id, date);
+        return calls
+                .stream()
+                .map(Call::toDto)
+                .collect(Collectors.toList());
     }
 }

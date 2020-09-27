@@ -1,5 +1,6 @@
 package com.intellectus.controllers.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.intellectus.model.Call;
 import lombok.Builder;
 import lombok.Getter;
