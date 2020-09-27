@@ -2,6 +2,7 @@ package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
+import com.intellectus.model.Break;
 import com.intellectus.model.Call;
 import com.intellectus.model.Shift;
 import com.intellectus.model.Stat;
@@ -11,6 +12,7 @@ import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
+import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.ShiftService;
 import com.intellectus.services.StatService;
@@ -33,6 +35,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.*;
 import javax.swing.text.html.Option;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,6 +64,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     ShiftService shiftService;
+
+    @Autowired
+    BreakService breakService;
 
     @Override
     public Collection<User> findAll() {
@@ -330,13 +336,29 @@ public class UserServiceImpl implements UserService {
         Collection<User> users = getOperatorsBySupervisor(supervisorId);
         List<OperatorDto> operators = new ArrayList<>();
         users.forEach(user -> {
+            boolean atBreak = atBreak(user);
+            boolean breakAssigned = breakAssignedBySupervisor(user);
             Optional<Stat> stat = statService.lastOperatorStat(user);
             OperatorDto dto = user.toOperatorDto(callService.actualOperatorCall(user) != null ? callService.actualOperatorCall(user).getStartTime() : null,
                                                  stat.map(Stat::getPrimaryEmotion).orElse(null),
-                                                 stat.map(Stat::getSecondaryEmotion).orElse(null));
+                                                 stat.map(Stat::getSecondaryEmotion).orElse(null),
+                                                 atBreak,
+                                                 breakAssigned);
             operators.add(dto);
         });
         return operators;
+    }
+
+    public boolean atBreak(User user) {
+        Optional<Break> breakOpt = breakService.findLastByUser(user, true);
+        if (breakOpt.isPresent()){
+            Break breakObj = breakOpt.get();
+            return breakObj.getCreated().plusMinutes(breakObj.getMinutesDuration()).isAfter(LocalDateTime.now());
+        } else return false;
+    }
+
+    public boolean breakAssignedBySupervisor(User user) {
+        return breakService.findLastByUser(user, false).isPresent();
     }
 
     public void assignSupervisorToOperator(User supervisor, Long operatorId) {
@@ -361,19 +383,25 @@ public class UserServiceImpl implements UserService {
         return repository.findAllByRole(role);
     }
 
-    public StatDto getOperatorEmotionStatus(User operator) {
+    public EmotionStatusDto getOperatorEmotionStatus(User operator) {
         Optional<Stat> opStat = statService.lastOperatorStat(operator);
         if(!opStat.isPresent()) {
-            return StatDto.builder().build();
+            return EmotionStatusDto.builder().build();
         }
         Stat stat = opStat.get();
-        return StatDto.builder()
+        StatDto statDto = StatDto.builder()
                       .sadness(stat.getSadness())
                       .anger(stat.getAnger())
                       .fear(stat.getFear())
                       .happiness(stat.getHappiness())
                       .neutrality(stat.getNeutrality())
                       .build();
+        return EmotionStatusDto.builder()
+                .status(statDto)
+                .name(operator.getName())
+                .atBreak(atBreak(operator))
+                .breakAssignedToActualCall(breakAssignedBySupervisor(operator))
+                .build();
     }
 
     public EmotionTablesDto getEmotionTables(User operator, LocalDate date){

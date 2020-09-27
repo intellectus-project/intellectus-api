@@ -17,4 +17,6 @@ public class OperatorDto {
     private EmotionDto secondaryEmotion;
     private String name;
     private String lastName;
+    private boolean atBreak;
+    private boolean breakAssignedToActualCall;
 }
