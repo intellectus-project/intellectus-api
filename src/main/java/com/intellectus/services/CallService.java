@@ -57,8 +57,13 @@ public class CallService {
         call.setEndTime(callDto.getEndTime());
         //todo: handle inexistent emotion exception
         call.setEmotion(Emotion.valueOf(callDto.getEmotion()).get());
-
         callRepository.save(call);
+
+        Optional<Break> breakOpt = breakService.findByCall(call);
+        breakOpt.ifPresent(breakObj -> {
+            breakObj.setActive(true);
+            breakService.save(breakObj);
+        });
 
         StatDto consultantDto = callDto.getConsultantStats();
         Stat consultantStats = new Stat(consultantDto.getSadness(),
