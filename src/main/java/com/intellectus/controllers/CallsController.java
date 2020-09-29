@@ -6,6 +6,7 @@ import com.intellectus.controllers.model.CallResponseDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.security.UserPrincipal;
 import com.intellectus.services.CallService;
+import com.intellectus.services.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -26,6 +28,9 @@ public class CallsController {
 
     public static final String URL_MAPPING_CALLS = "/calls";
     private CallService callService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public CallsController(CallService callService){
@@ -73,6 +78,18 @@ public class CallsController {
     public ResponseEntity<?> find(@PathVariable @Min(1) Long id) {
         try {
             return ResponseEntity.ok().body(callService.findByIdWithInfo(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/byOperator")
+    public ResponseEntity<?> byOperator(@RequestParam Optional<Long> id,
+                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                       @AuthenticationPrincipal UserPrincipal principal) {
+        try {
+            User user = id.isPresent() ? userService.findById(id.get()) : userService.findById(principal.getId());
+            return ResponseEntity.ok().body(callService.fetchByDateAndOperator(date, user.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

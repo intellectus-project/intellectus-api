@@ -54,6 +54,7 @@ public class Call extends AuditableEntity{
                 .startTime(this.startTime)
                 .endTime(this.endTime)
                 .operator(new ReducedUserInfoDto(this.user.getId(), this.user.getName()))
+                .id(this.getId())
                 .build();
     }
 }

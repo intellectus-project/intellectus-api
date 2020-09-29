@@ -135,4 +135,12 @@ public class CallService {
     public Call lastOperatorCall(User operator) {
         return callRepository.findLastByOperator(operator.getId());
     }
+
+    public List<CallInfoDto> fetchByDateAndOperator(LocalDate date, Long id){
+        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDay(id, date);
+        return calls
+                .stream()
+                .map(Call::toDto)
+                .collect(Collectors.toList());
+    }
 }

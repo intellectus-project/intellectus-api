@@ -26,6 +26,8 @@ public interface CallRepository extends CrudRepository<Call, Long> {
 
     List<Call> findAllByUser_Supervisor_IdAndStartTimeBetween(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
 
+    List<Call> findAllByUser_IdAndOccurrenceDay(Long operatorId, LocalDate date);
+
     List<Call> findAllByStartTimeBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
 
     @Query(value = "select * from calls c " +

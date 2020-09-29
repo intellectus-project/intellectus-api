@@ -402,7 +402,7 @@ public class DBInitializer implements CommandLineRunner {
     private void createCall(User user, LocalDateTime date, int i) {
         try {
             LocalDateTime startDate = date.plusHours(i);
-            LocalDateTime endDate = date.plusMinutes(DbInitializerUtils.getRandomInt(5, 85));
+            LocalDateTime endDate = startDate.plusMinutes(DbInitializerUtils.getRandomInt(5, 85));
             Long callId = callService.create(user, CallRequestPostDto.builder().startTime(startDate).build());
             List<Double> consultantStats = DbInitializerUtils.randomStats();
             StatDto consultantDto = StatDto.builder()
