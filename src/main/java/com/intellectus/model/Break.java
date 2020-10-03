@@ -26,6 +26,7 @@ public class Break extends AuditableEntity {
     private Call call;
 
     private LocalDateTime created;
+    private LocalDateTime updated;
 
     @Column(columnDefinition = "int default 10")
     private int minutesDuration;
