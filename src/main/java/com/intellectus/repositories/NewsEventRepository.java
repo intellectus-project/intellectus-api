@@ -21,5 +21,5 @@ public interface NewsEventRepository extends JpaRepository<NewsEvent, Long> {
     @Query("from NewsEvent where url = :url")
     List<NewsEvent> findByUrl(@Param("url") String url);
 
-    Page<NewsEventDto> findAllByCreatedBetween(Pageable pageable, LocalDateTime dateFrom, LocalDateTime dateTo);
+    List<NewsEventDto> findAllByCreatedBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
 }

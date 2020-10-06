@@ -204,8 +204,7 @@ public class DBInitializer implements CommandLineRunner {
     private void newsEvents() {
         LocalDateTime dateFrom = LocalDate.now().atStartOfDay();
         LocalDateTime dateTo = LocalDate.now().atTime(LocalTime.MAX);
-        Pageable pageRequest = PageRequest.of(1,1, Sort.by("created").descending());
-        if(newsEventRepository.findAllByCreatedBetween(pageRequest, dateFrom, dateTo).getTotalElements() == 0) {
+        if(newsEventRepository.findAllByCreatedBetween(dateFrom, dateTo).size() == 0) {
             newsEventService.fetch();
         }
     }

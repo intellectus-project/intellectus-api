@@ -32,14 +32,10 @@ public class NewsEventsController {
     }
 
     @GetMapping
-    public ResponseEntity<?> find(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
-                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
-                                    @RequestParam("page") @Min(0) @Max(9999999) int page,
-                                    @RequestParam("size") @Min(1) @Max(9999) int size) {
+    public ResponseEntity<?> find(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        Pageable pageRequest = PageRequest.of(page,size, Sort.by("created").descending());
         try {
-            return ResponseEntity.ok().body(newsEventService.fetchByDate(dateFrom, dateTo, pageRequest));
+            return ResponseEntity.ok().body(newsEventService.fetchByDate(date));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
