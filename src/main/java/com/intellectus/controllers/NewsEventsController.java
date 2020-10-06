@@ -32,10 +32,11 @@ public class NewsEventsController {
     }
 
     @GetMapping
-    public ResponseEntity<?> find(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<?> find(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
 
         try {
-            return ResponseEntity.ok().body(newsEventService.fetchByDate(date));
+            return ResponseEntity.ok().body(newsEventService.fetchByDate(dateFrom, dateTo));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

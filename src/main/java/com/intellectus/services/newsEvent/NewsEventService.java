@@ -78,7 +78,7 @@ public class NewsEventService {
         }
     }
 
-    public List<NewsEventDto> fetchByDate(LocalDate date) {
-        return newsEventRepository.findAllByCreatedBetween(date.atStartOfDay().minusDays(2), date.atTime(LocalTime.MAX));
+    public List<NewsEventDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo) {
+        return newsEventRepository.findAllByCreatedBetween(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
     }
 }
