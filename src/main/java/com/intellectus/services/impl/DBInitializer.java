@@ -111,9 +111,15 @@ public class DBInitializer implements CommandLineRunner {
     private void menusAndPermissions(){
         if (roleRepository.findByCode(com.intellectus.model.constants.Role.ROLE_ADMIN.role()) == null) {
             menuRepository.deleteAll();
+            Menu mOperators = menuRepository.save(Menu.builder().name("Operadores")
+                    .code("OPERADORES")
+                    .icon("team")
+                    .uri("/operators")
+                    .order(2)
+                    .build());
             Menu mViewDashboard = menuRepository.save(Menu.builder().name("Dashboard")
                     .code("VIEW_DASHBOARD")
-                    .icon("bar-chart")
+                    .icon("dashboard")
                     .uri("/dashboard")
                     .order(0)
                     .build());
@@ -171,7 +177,7 @@ public class DBInitializer implements CommandLineRunner {
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
                     .description("Administrator")
-                    .menus(Sets.newHashSet(mViewDashboard, mMainUser, mManageUsers, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mViewUser, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
             Role roleOperator = roleRepository.save(Role.builder()
@@ -184,7 +190,7 @@ public class DBInitializer implements CommandLineRunner {
             Role roleSupervisor = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role())
                     .description("Analyst")
-                    .menus(Sets.newHashSet(mMainUser, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mViewUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
         }
