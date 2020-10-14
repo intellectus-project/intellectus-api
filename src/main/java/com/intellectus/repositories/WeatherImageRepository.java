@@ -14,4 +14,5 @@ import java.util.Optional;
 public interface WeatherImageRepository extends CrudRepository<WeatherImage, Long> {
     Optional<WeatherImage> findByDescription(String description);
     Optional<WeatherImage> findByDescriptionAndMinHourAndMaxHour(String description, int minHour, int maxHour);
+    Optional<WeatherImage> findByDescriptionAndMinHourGreaterThanEqualAndMaxHourLessThanEqual(String description, int currentHourMin, int currentHourMax);
 }

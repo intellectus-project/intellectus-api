@@ -28,7 +28,7 @@ public class WeathersController {
     private WeatherService weatherService;
 
     @GetMapping()
-    public ResponseEntity<?> getRingsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<?> getWeathers(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         try {
             return ResponseEntity.ok().body(weatherService.getDayWeatherInfo(date));
         } catch (Exception ex) {

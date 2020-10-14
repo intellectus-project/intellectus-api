@@ -111,7 +111,7 @@ public class WeatherService {
         Weather currentWeather = weathers.stream().findFirst().get();
         double maxTemperature = Collections.max(weathers, Comparator.comparing(w -> w.getTemperature())).getRoundedTemperature() ;
         double minTemperature = Collections.min(weathers, Comparator.comparing(w -> w.getTemperature())).getRoundedTemperature();
-        Optional<WeatherImage> image = weatherImageService.findByDescription(currentWeather.getDescription());
+        Optional<WeatherImage> image = weatherImageService.findByDescriptionAndCurrentHour(currentWeather.getDescription());
         String imageName;
         if(image.isPresent())
             imageName = image.get().getImage();

@@ -68,7 +68,7 @@ public class StatService {
                         elem.getFear(),
                         elem.getNeutrality(),
                         elem.getOccurrenceDayTrunc(),
-                        null
+                        Optional.empty()
                 )).collect(Collectors.toList());
     }
 

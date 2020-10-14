@@ -220,7 +220,6 @@ public class DBInitializer implements CommandLineRunner {
                 Weather weather = new Weather(desc, temp + tempModifier , time);
                 weatherRepository.save(weather);
             }
-
         }
     }
 
@@ -237,6 +236,7 @@ public class DBInitializer implements CommandLineRunner {
         weatherImageService.create("Bruma" , "niebla.png");
         weatherImageService.create("Nubes dispersas", "parcialmentenublado.png", 7, 18);
         weatherImageService.create("Nubes dispersas", "cloudmoon.png", 19, 6);
+        weatherImageService.create("Muy nuboso" , "nube.png");
     }
 
     private void shifts() {

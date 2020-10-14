@@ -6,6 +6,8 @@ import com.intellectus.repositories.WeatherImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,11 @@ public class WeatherImageService {
 
     public Optional<WeatherImage> findByDescription(String description){
         return repository.findByDescription(description);
+    }
+
+    public Optional<WeatherImage> findByDescriptionAndCurrentHour(String description){
+        int hour = LocalDateTime.now().getHour();
+        return repository.findByDescriptionAndMinHourGreaterThanEqualAndMaxHourLessThanEqual(description, hour, hour);
     }
 
     public Optional<WeatherImage> findByDescriptionAndTime(String description, int minHour, int maxHour){
