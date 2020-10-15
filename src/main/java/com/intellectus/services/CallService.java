@@ -126,7 +126,7 @@ public class CallService {
                    .weather(weather)
                    .shift(call.getUser().getShift())
                    .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))
-                   .breakDurationMinutes(breakOpt.isPresent() ? breakOpt.get().getMinutesDuration() : null)
+                   .breakDurationMinutes(breakOpt.isPresent() ? breakOpt.get().getMinutesDuration() : 0)
                    .breakTaken(breakOpt.isPresent())
                    .build();
 
