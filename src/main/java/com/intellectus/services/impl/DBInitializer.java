@@ -127,7 +127,7 @@ public class DBInitializer implements CommandLineRunner {
             Menu mMainUser = menuRepository.save(Menu.builder().name("Cuenta")
                     .code("USERS")
                     .icon("user")
-                    .order(2)
+                    .order(3)
                     .build());
             Menu mLogout = menuRepository.save(Menu.builder().name("Logout")
                     .code("LOGOUT")
@@ -170,20 +170,20 @@ public class DBInitializer implements CommandLineRunner {
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
                     .description("Administrator")
-                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
             Role roleOperator = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
                     .description("Viewer")
-                    .menus(Sets.newHashSet(mMainUser, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
 
             Role roleSupervisor = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role())
                     .description("Analyst")
-                    .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
         }
