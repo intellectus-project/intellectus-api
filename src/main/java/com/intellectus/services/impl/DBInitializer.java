@@ -117,30 +117,23 @@ public class DBInitializer implements CommandLineRunner {
                     .uri("/operators")
                     .order(2)
                     .build());
+
             Menu mViewDashboard = menuRepository.save(Menu.builder().name("Dashboard")
                     .code("VIEW_DASHBOARD")
                     .icon("dashboard")
                     .uri("/dashboard")
                     .order(0)
                     .build());
-            Menu mMainUser = menuRepository.save(Menu.builder().name("Perfil")
+            Menu mMainUser = menuRepository.save(Menu.builder().name("Cuenta")
                     .code("USERS")
                     .icon("user")
                     .order(2)
-                    .build());
-            Menu mViewUser = menuRepository.save(Menu.builder().name("Ver Perfil")
-                    .code("VIEW_PROFILE")
-                    //.icon("user")
-                    .parent(mMainUser)
-                    .uri("/user-information")
-                    .order(0)
-                    .type("GET")
                     .build());
             Menu mLogout = menuRepository.save(Menu.builder().name("Logout")
                     .code("LOGOUT")
                     .icon("logout")
                     .parent(mMainUser)
-                    .order(1)
+                    .order(0)
                     .uri("/login")
                     .type("GET")
                     .build());
