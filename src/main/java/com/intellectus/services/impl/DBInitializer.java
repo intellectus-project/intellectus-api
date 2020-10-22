@@ -117,30 +117,23 @@ public class DBInitializer implements CommandLineRunner {
                     .uri("/operators")
                     .order(2)
                     .build());
+
             Menu mViewDashboard = menuRepository.save(Menu.builder().name("Dashboard")
                     .code("VIEW_DASHBOARD")
                     .icon("dashboard")
                     .uri("/dashboard")
                     .order(0)
                     .build());
-            Menu mMainUser = menuRepository.save(Menu.builder().name("Perfil")
+            Menu mMainUser = menuRepository.save(Menu.builder().name("Cuenta")
                     .code("USERS")
                     .icon("user")
-                    .order(2)
-                    .build());
-            Menu mViewUser = menuRepository.save(Menu.builder().name("Ver Perfil")
-                    .code("VIEW_PROFILE")
-                    //.icon("user")
-                    .parent(mMainUser)
-                    .uri("/user-information")
-                    .order(0)
-                    .type("GET")
+                    .order(3)
                     .build());
             Menu mLogout = menuRepository.save(Menu.builder().name("Logout")
                     .code("LOGOUT")
                     .icon("logout")
                     .parent(mMainUser)
-                    .order(1)
+                    .order(0)
                     .uri("/login")
                     .type("GET")
                     .build());
@@ -177,20 +170,20 @@ public class DBInitializer implements CommandLineRunner {
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
                     .description("Administrator")
-                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mManageUsers, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
             Role roleOperator = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
                     .description("Viewer")
-                    .menus(Sets.newHashSet(mMainUser, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
 
             Role roleSupervisor = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role())
                     .description("Analyst")
-                    .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mViewUser, mLogout))
+                    .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
         }
