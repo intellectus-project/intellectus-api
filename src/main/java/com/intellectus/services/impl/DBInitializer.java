@@ -437,7 +437,7 @@ public class DBInitializer implements CommandLineRunner {
             callService.update(callDto, callId);
             if (DbInitializerUtils.getRandomInt(1,100) % 10 == 0) {
                 //TODO hacer random la duración del descanso
-                breakService.create(callService.findById(callId).get(), 10);
+                breakService.create(callService.findById(callId).get(), 10, false, true);
             }
         } catch (Exception e) {
             System.out.println("Error creando call de prueba");

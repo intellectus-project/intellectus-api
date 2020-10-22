@@ -58,7 +58,7 @@ public class Stat {
     public EmotionDto getSecondaryEmotion() {
         List<Double> emotions = Arrays.asList(this.sadness, this.happiness, this.fear, this.neutrality, this.anger);
         Collections.sort(emotions);
-        double secondMaxEmotion = emotions.get(1);
+        double secondMaxEmotion = emotions.get(3);
         return new EmotionDto(findEmotion(secondMaxEmotion), secondMaxEmotion);
     }
 
