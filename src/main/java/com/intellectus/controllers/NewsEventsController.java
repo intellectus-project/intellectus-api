@@ -28,7 +28,6 @@ public class NewsEventsController {
     @Autowired
     public NewsEventsController(NewsEventService newsEventService) {
         this.newsEventService = newsEventService;
-
     }
 
     @GetMapping
