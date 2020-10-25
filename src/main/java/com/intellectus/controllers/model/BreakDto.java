@@ -11,10 +11,14 @@ import java.time.LocalDateTime;
 public class BreakDto  {
     private Call call;
     private LocalDateTime created;
+    private Integer duration;
+    private Boolean givenBySupervisor;
 
-    public BreakDto(Call call, LocalDateTime created)
+    public BreakDto(Call call, LocalDateTime created, Integer duration, Boolean givenBySupervisor)
     {
         this.call = call;
         this.created = created;
+        this.duration = duration;
+        this.givenBySupervisor = givenBySupervisor;
     }
 }
