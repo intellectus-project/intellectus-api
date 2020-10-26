@@ -11,7 +11,7 @@
 	<groupId>com.intellectus</groupId>
 	<artifactId>project-id</artifactId>
 	<version>1.0.0</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>Intellectus</name>
 	<description>Intellectus backend</description>
 
@@ -187,6 +187,14 @@
 					</buildArgs>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
         </plugins>
 	</build>
 
