@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class CallResponsePatchDto {
     Boolean breakAssigned;
+    Integer minutesDuration;
 }

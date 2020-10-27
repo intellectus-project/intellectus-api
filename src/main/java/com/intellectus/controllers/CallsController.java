@@ -55,8 +55,7 @@ public class CallsController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody @Valid CallRequestPatchDto call, @PathVariable @Min(1) Long id) {
         try {
-            Boolean breakAssigned = callService.update(call, id);
-            return ResponseEntity.ok().body(CallResponsePatchDto.builder().breakAssigned(breakAssigned).build());
+            return ResponseEntity.ok().body(callService.update(call, id));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
