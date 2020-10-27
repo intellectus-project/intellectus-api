@@ -1,10 +1,7 @@
 package com.intellectus.controllers;
 
 import com.google.common.collect.Collections2;
-import com.intellectus.controllers.model.CallResponseDto;
-import com.intellectus.controllers.model.MenuDto;
-import com.intellectus.controllers.model.OperatorDto;
-import com.intellectus.controllers.model.UserEditRequest;
+import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.ExistUserException;
 import com.intellectus.exceptions.PasswordNotMatchException;
 import com.intellectus.exceptions.InexistentUserException;
@@ -22,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -221,4 +219,14 @@ public class UsersController {
         User user = operatorId.isPresent() ? service.findById(operatorId.get()) : service.findById(operator.getId());
         return ResponseEntity.ok().body(service.getEmotionTables(user, date));
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISOR')")
+    @PostMapping("/registerWebPush")
+    public ResponseEntity<?> registerWebPush(@AuthenticationPrincipal UserPrincipal supervisor, @RequestBody @Valid RegisterUserWebPushDto dto)
+    {
+        service.registerWebPush(service.findById(supervisor.getId()), dto);
+        return ResponseEntity.ok().body("ok");
+    }
+
+
 }

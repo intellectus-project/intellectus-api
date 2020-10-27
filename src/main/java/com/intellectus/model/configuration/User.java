@@ -69,6 +69,10 @@ public class User extends AuditableEntity {
     @ManyToOne
     private Shift shift;
 
+    private String endpoint;
+    private String p256dh;
+    private String auth;
+
     public User() {
         this.active = true;
     }
@@ -124,5 +128,9 @@ public class User extends AuditableEntity {
                 .atBreak(atBreak)
                 .breakAssignedToActualCall(breakAssigned)
                 .build();
+    }
+
+    public String getFullName() {
+        return this.getName() + " " + this.getLastName();
     }
 }

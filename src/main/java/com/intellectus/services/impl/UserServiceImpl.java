@@ -416,4 +416,11 @@ public class UserServiceImpl implements UserService {
         });
         return dto;
     }
+
+    public void registerWebPush(User user, RegisterUserWebPushDto dto) {
+        user.setEndpoint(dto.getEndpoint());
+        user.setAuth(dto.getAuth());
+        user.setP256dh(dto.getP256dh());
+        repository.save(user);
+    }
 }
