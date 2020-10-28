@@ -20,15 +20,19 @@ import java.util.Optional;
 public class BreakService {
 
     @Autowired
-    public BreakService(BreakRepository breakRepository){
+    public BreakService(BreakRepository breakRepository, SendWebPushNotification sendWebPushNotification){
         this.breakRepository = breakRepository;
+        this.sendWebPushNotification = sendWebPushNotification;
     }
 
     private BreakRepository breakRepository;
+    private SendWebPushNotification sendWebPushNotification;
 
     public void create(Call call, int minutesDuration) {
         Break breakInstance = new Break(call, minutesDuration);
         breakRepository.save(breakInstance);
+        User user = call.getUser();
+        sendWebPushNotification.breakTaken(user.getSupervisor(), user.getFullName());
     }
 
     public void create(Call call, int minutesDuration, boolean givenBySupervisor, boolean active) {

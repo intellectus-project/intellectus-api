@@ -3,6 +3,7 @@ package com.intellectus.controllers;
 import com.intellectus.controllers.model.CallRequestPostDto;
 import com.intellectus.controllers.model.CallRequestPatchDto;
 import com.intellectus.controllers.model.CallResponseDto;
+import com.intellectus.controllers.model.CallResponsePatchDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.security.UserPrincipal;
 import com.intellectus.services.CallService;
@@ -52,10 +53,9 @@ public class CallsController {
 
     @PreAuthorize("hasRole('ROLE_OPERATOR')")
     @PatchMapping("/{id}")
-    public ResponseEntity<String> update(@RequestBody @Valid CallRequestPatchDto call, @PathVariable @Min(1) Long id) {
+    public ResponseEntity<?> update(@RequestBody @Valid CallRequestPatchDto call, @PathVariable @Min(1) Long id) {
         try {
-            callService.update(call, id);
-            return ResponseEntity.ok().body("updated");
+            return ResponseEntity.ok().body(callService.update(call, id));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

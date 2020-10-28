@@ -11,16 +11,14 @@ import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.CallRepository;
 import com.intellectus.services.weather.WeatherService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import com.intellectus.services.impl.UserServiceImpl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +47,7 @@ public class CallService {
         return call.getId();
     }
 
-    public void update(CallRequestPatchDto callDto, Long id) throws Exception {
+    public CallResponsePatchDto update(CallRequestPatchDto callDto, Long id) throws Exception {
         Optional<Call> optionalCall = callRepository.findById((id));
         if (optionalCall.isEmpty())
             throw new Exception("Call does not exist");
@@ -59,10 +57,15 @@ public class CallService {
         call.setEmotion(Emotion.valueOf(callDto.getEmotion()).get());
         callRepository.save(call);
 
+        AtomicReference<Boolean> breakAssigned = new AtomicReference<>(false);
+        AtomicReference<Integer> minutesDuration = new AtomicReference<>();
+
         Optional<Break> breakOpt = breakService.findByCall(call);
         breakOpt.ifPresent(breakObj -> {
             breakObj.setActive(true);
             breakService.save(breakObj);
+            breakAssigned.set(true);
+            minutesDuration.set(breakObj.getMinutesDuration());
         });
 
         StatDto consultantDto = callDto.getConsultantStats();
@@ -84,6 +87,10 @@ public class CallService {
                 call,
                 SpeakerType.SPEAKER_TYPE_OPERATOR);
         statService.create(operatorStats);
+        return CallResponsePatchDto.builder()
+                .breakAssigned(breakAssigned.get())
+                .minutesDuration(minutesDuration.get())
+                .build();
     }
 
     public Call actualOperatorCall(User operator) {
