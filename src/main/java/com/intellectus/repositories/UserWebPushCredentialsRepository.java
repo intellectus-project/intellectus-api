@@ -15,6 +15,5 @@ public interface UserWebPushCredentialsRepository extends CrudRepository<UserWeb
 
     Collection<UserWebPushCredentials> findAllByUser(User user);
 
-    Optional<UserWebPushCredentials> findByIp(String ip);
 }
 
