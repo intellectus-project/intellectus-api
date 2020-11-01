@@ -419,13 +419,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public void registerWebPush(User user, RegisterUserWebPushDto dto) {
-        Optional<UserWebPushCredentials> optCredentials = userWebPushCredentialsRepository.findByIp(dto.getIp());
-        UserWebPushCredentials credentials = optCredentials.orElseGet(() -> new UserWebPushCredentials());
+        UserWebPushCredentials credentials = new UserWebPushCredentials();
         credentials.setEndpoint(dto.getEndpoint());
         credentials.setAuth(dto.getAuth());
         credentials.setP256dh(dto.getP256dh());
         credentials.setUser(user);
-        credentials.setIp(dto.getIp());
         userWebPushCredentialsRepository.save(credentials);
     }
 }

@@ -227,6 +227,4 @@ public class UsersController {
         service.registerWebPush(service.findById(supervisor.getId()), dto);
         return ResponseEntity.ok().body("ok");
     }
-
-
 }
