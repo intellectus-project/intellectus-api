@@ -2,16 +2,14 @@ package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
-import com.intellectus.model.Break;
-import com.intellectus.model.Call;
-import com.intellectus.model.Shift;
-import com.intellectus.model.Stat;
+import com.intellectus.model.*;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
+import com.intellectus.repositories.UserWebPushCredentialsRepository;
 import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.ShiftService;
@@ -67,6 +65,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     BreakService breakService;
+
+    @Autowired
+    UserWebPushCredentialsRepository userWebPushCredentialsRepository;
 
     @Override
     public Collection<User> findAll() {
@@ -418,9 +419,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void registerWebPush(User user, RegisterUserWebPushDto dto) {
-        user.setEndpoint(dto.getEndpoint());
-        user.setAuth(dto.getAuth());
-        user.setP256dh(dto.getP256dh());
-        repository.save(user);
+        Optional<UserWebPushCredentials> optCredentials = userWebPushCredentialsRepository.findByIp(dto.getIp());
+        UserWebPushCredentials credentials = optCredentials.orElseGet(() -> new UserWebPushCredentials());
+        credentials.setEndpoint(dto.getEndpoint());
+        credentials.setAuth(dto.getAuth());
+        credentials.setP256dh(dto.getP256dh());
+        credentials.setUser(user);
+        credentials.setIp(dto.getIp());
+        userWebPushCredentialsRepository.save(credentials);
     }
 }
