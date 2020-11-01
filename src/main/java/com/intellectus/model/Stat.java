@@ -10,10 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -50,16 +48,27 @@ public class Stat {
         this.speakerType = speakerType;
     }
 
+    public EmotionDto getSortedMap(int index) {
+        Map<Emotion, Double> emotions = Map.ofEntries(
+            Map.entry(Emotion.EMOTION_SADNESS, sadness),
+            Map.entry(Emotion.EMOTION_HAPPINESS, happiness),
+            Map.entry(Emotion.EMOTION_FEAR, fear),
+            Map.entry(Emotion.EMOTION_NEUTRALITY, neutrality),
+            Map.entry(Emotion.EMOTION_ANGER, anger)
+        );
+
+        Map<Emotion, Double> java8Approach = emotions.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(
+                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return new EmotionDto(new ArrayList<>(java8Approach.keySet()).get(index),
+                new ArrayList<>(java8Approach.values()).get(index));
+    }
+
     public EmotionDto getPrimaryEmotion() {
-        double maxEmotion = Collections.max(Arrays.asList(this.sadness, this.happiness, this.fear, this.neutrality, this.anger));
-        return new EmotionDto(findEmotion(maxEmotion), maxEmotion);
+        return getSortedMap(4);
     }
 
     public EmotionDto getSecondaryEmotion() {
-        List<Double> emotions = Arrays.asList(this.sadness, this.happiness, this.fear, this.neutrality, this.anger);
-        Collections.sort(emotions);
-        double secondMaxEmotion = emotions.get(3);
-        return new EmotionDto(findEmotion(secondMaxEmotion), secondMaxEmotion);
+        return getSortedMap(3);
     }
 
     private Emotion findEmotion(double emotion){
