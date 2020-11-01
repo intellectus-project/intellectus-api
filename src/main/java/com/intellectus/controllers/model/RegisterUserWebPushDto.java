@@ -9,4 +9,5 @@ public class RegisterUserWebPushDto {
     private String endpoint;
     private String p256dh;
     private String auth;
+    private String ip;
 }
