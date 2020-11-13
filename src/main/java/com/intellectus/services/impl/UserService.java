@@ -50,4 +50,6 @@ public interface UserService {
     EmotionTablesDto getEmotionTables(User operator, LocalDate date);
 
     void registerWebPush(User user, RegisterUserWebPushDto dto);
+
+    boolean atBreak(User user);
 }
