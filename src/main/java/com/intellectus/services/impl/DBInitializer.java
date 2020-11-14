@@ -100,7 +100,8 @@ public class DBInitializer implements CommandLineRunner {
 
         menusAndPermissions();
         newsEvents();
-        weathers();
+        weatherService.fetchFiveDaysHistorical();
+        //weathers();
         weatherImages();
         shifts();
         users();

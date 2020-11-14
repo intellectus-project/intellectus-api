@@ -11,6 +11,7 @@ import com.intellectus.services.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,6 +44,10 @@ public class CallsController {
     public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal operator, @RequestBody @Valid CallRequestPostDto call) {
         try {
             User user = new User(operator.getId());
+
+            if (userService.atBreak(user))
+                return ResponseEntity.status(HttpStatus.LOCKED).body("El operador se encuentra en descanso");
+
             Long id = callService.create(user, call);
             return ResponseEntity.ok().body(new CallResponseDto(id));
 
