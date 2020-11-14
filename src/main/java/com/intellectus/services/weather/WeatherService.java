@@ -10,15 +10,16 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.tomcat.jni.Local;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Collections;
@@ -50,6 +51,8 @@ public class WeatherService {
     private String API_KEY;
 
     private static final Integer BUENOS_AIRES_ID = 3433955;
+    private static final String LAT = "-34.587873";
+    private static final String LON = "-58.456468";
 
     @Autowired
     public WeatherService(WeatherRepository weatherRepository, WeatherImageService weatherImageService) {
@@ -75,22 +78,75 @@ public class WeatherService {
             Response response = call.execute();
             String jsonData = response.body().string();
             JSONObject jsonResponse = new JSONObject(jsonData);
-            save(jsonResponse);
+            normalizeAndSave(jsonResponse);
         } catch (Exception e) {
             log.error(e.getStackTrace().toString());
         }
     }
 
-    private void save(JSONObject jsonResponse) {
+    public void fetchFiveDaysHistorical() {
+        LocalDateTime dt = LocalDateTime.now().minusDays(4);
+        for(int i = 0; i<=4; i++){
+            fetchHistorical(dt.plusDays(i));
+        }
+    }
+
+    public void fetchHistorical(LocalDateTime dt) {
         try {
-            Double temp = kelvinToCelsius(jsonResponse.getJSONObject("main").getDouble("temp"));
-            String description = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("description");
-            LocalDateTime now = LocalDateTime.now();
-            Weather weather = new Weather(capitalize(description), temp, now);
-            weatherRepository.save(weather);
+            Request request = new Request.Builder()
+                    .url(BASE_URL + "onecall/timemachine?lat=" + LAT + "&lon=" + LON + "&appid=" + API_KEY
+                            + "&dt=" + unixTimestamp(dt) + "&lang=es")
+                    .build();
+
+            Call call = client.newCall(request);
+            Response response = call.execute();
+            String jsonData = response.body().string();
+            JSONObject jsonResponse = new JSONObject(jsonData);
+            JSONObject current = jsonResponse.getJSONObject("current");
+            findOrSave(getDescription(current), current.getDouble("temp"), unixToLocalDateTime(current.getString("dt")));
+            JSONArray array = jsonResponse.getJSONArray("hourly");
+            if (array != null) {
+                Object obj = new Object();
+                int len = array.length();
+                for (int i=0;i<len;i++){
+                    obj = array.get(i);
+                    findOrSave(getDescription((JSONObject)obj), ((JSONObject) obj).getDouble("temp"), unixToLocalDateTime(((JSONObject) obj).getString("dt")));
+                }
+            }
         } catch (Exception e) {
             log.error(e.getStackTrace().toString());
         }
+    }
+
+    private String unixTimestamp(LocalDateTime dt) {
+        return String.valueOf(dt.toEpochSecond(ZoneOffset.UTC));
+    }
+
+    private LocalDateTime unixToLocalDateTime(String unix) {
+        return LocalDateTime.ofEpochSecond(Long.valueOf(unix), 0, ZoneOffset.UTC);
+    }
+
+    private void normalizeAndSave(JSONObject jsonResponse) {
+        try {
+            Double temp = jsonResponse.getJSONObject("main").getDouble("temp");
+            String description = getDescription(jsonResponse);
+            LocalDateTime now = LocalDateTime.now();
+            findOrSave(capitalize(description), temp, now);
+        } catch (Exception e) {
+            log.error(e.getStackTrace().toString());
+        }
+    }
+
+    private String getDescription(JSONObject obj) throws JSONException {
+        return obj.getJSONArray("weather").getJSONObject(0).getString("description");
+    }
+
+    private void findOrSave(String description, double temp, LocalDateTime dt) {
+        if (!weatherRepository.findByHour(dt).isEmpty()) {
+            return;
+        }
+        Weather weather = new Weather(capitalize(description), kelvinToCelsius(temp), dt);
+        weatherRepository.save(weather);
     }
 
     public Weather getWeatherAt(LocalDateTime dateTime) {

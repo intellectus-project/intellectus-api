@@ -19,7 +19,7 @@ public interface WeatherRepository extends CrudRepository<Weather, Long> {
     List<Weather> findByTimeAfterAndTimeBeforeOrderByTimeDesc(LocalDateTime dateFrom, LocalDateTime dateTo);
 
     @Query(value = "select * from weathers " +
-            "WHERE :paramTime = date_trunc('hour', time)",
+            "WHERE date_trunc('hour',:paramTime\\:\\:timestamp) = date_trunc('hour', time)",
             nativeQuery = true)
     List<Weather> findByHour(@Param("paramTime") LocalDateTime paramTime);
 }
