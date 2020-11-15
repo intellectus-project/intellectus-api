@@ -99,9 +99,7 @@ public class DBInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         menusAndPermissions();
-        newsEvents();
         weatherService.fetchFiveDaysHistorical();
-        //weathers();
         weatherImages();
         shifts();
         users();
