@@ -17,10 +17,12 @@ import java.util.List;
 @Repository
 public interface CallRepository extends CrudRepository<Call, Long> {
 
-    @Query(value = "select * from calls c " +
-            "where c.id_user = :id AND end_time iS NULL " +
-            "order by c.created desc " +
-            "limit 1",
+    @Query(value = "select * from (" +
+            "select * from calls c " +
+            "where c.id_user = :id " +
+            "order by c.created desc NULLS LAST " +
+            "limit 1 ) sq " +
+            "where end_time iS NULL",
             nativeQuery = true)
     Call findActualByOperator(@Param("id") Long id);
 

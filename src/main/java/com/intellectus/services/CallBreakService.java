@@ -21,11 +21,11 @@ public class CallBreakService {
     private BreakService breakService;
     private CallService callService;
 
-    public Optional<Break> lastCallBreak(User operator) throws Exception {
+    public Optional<Break> lastCallBreak(User operator) {
         Optional<Break> breakOpt = Optional.of(new Break());
         Call call = callService.actualOperatorCall(operator);
         if(call == null) {
-            throw new Exception("Operator is not at a call");
+            throw new RuntimeException("El operador no se encuentra en llamada");
         }
         return breakService.findByCall(call);
     }

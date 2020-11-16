@@ -36,7 +36,8 @@ public class WeatherImageService {
 
     public Optional<WeatherImage> findByDescriptionAndCurrentHour(String description){
         int hour = LocalDateTime.now().getHour();
-        Optional<WeatherImage> img = repository.findByDescriptionAndMinHourGreaterThanEqualAndMaxHourLessThanEqual(description, hour, hour);
+        if(hour > 18) hour-= 24;
+        Optional<WeatherImage> img = repository.findByDescriptionAndMinHourLessThanEqualAndMaxHourGreaterThanEqual(description, hour, hour);
         return img.isPresent() ? img : findByDescription(description);
     }
 

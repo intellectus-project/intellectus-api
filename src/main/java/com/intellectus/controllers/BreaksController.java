@@ -13,6 +13,7 @@ import com.intellectus.services.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -65,13 +66,15 @@ public class BreaksController {
         try {
             User user = userService.findById(operatorId);
             Optional<Break> breakOpt = callBreakService.lastCallBreak(user);
-            if(breakOpt.isPresent())
-                return ResponseEntity.badRequest().body("Break already assigned");
+            if (breakOpt.isPresent())
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Descanso ya asignado");
             callBreakService.createBreakBySupervisor(user, defaultDuration(minutesDuration));
             return ResponseEntity.ok().body("created");
 
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Error asignando descanso");
         }
     }
 
