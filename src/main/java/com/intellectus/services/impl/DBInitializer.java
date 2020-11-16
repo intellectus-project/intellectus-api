@@ -228,12 +228,12 @@ public class DBInitializer implements CommandLineRunner {
         weatherImageService.create("Nubes rotas", "nube.png");
         weatherImageService.create("Lluvia ligera", "lluvia.png");
         weatherImageService.create("Cielo claro", "soleado.png", 7, 18);
-        weatherImageService.create("Cielo claro", "moon.png", 19, 6);
+        weatherImageService.create("Cielo claro", "moon.png", -5, 6);
         weatherImageService.create("Algo de nubes", "parcialmentenublado.png", 7, 18);
-        weatherImageService.create("Algo de nubes", "cloudmoon.png", 19, 6);
+        weatherImageService.create("Algo de nubes", "cloudmoon.png", -5, 6);
         weatherImageService.create("Bruma" , "niebla.png");
         weatherImageService.create("Nubes dispersas", "parcialmentenublado.png", 7, 18);
-        weatherImageService.create("Nubes dispersas", "cloudmoon.png", 19, 6);
+        weatherImageService.create("Nubes dispersas", "cloudmoon.png", -5, 6);
         weatherImageService.create("Muy nuboso" , "nube.png");
     }
 
