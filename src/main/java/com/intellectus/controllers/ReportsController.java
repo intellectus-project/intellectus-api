@@ -60,11 +60,12 @@ public class ReportsController {
     @GetMapping("/barsChart")
     public ResponseEntity<?> getBarsChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
-                                                     @RequestParam Optional<Long> operatorId)
+                                                     @RequestParam Optional<Long> operatorId,
+                                                    @AuthenticationPrincipal UserPrincipal supervisor)
     {
         List<BarsChartDto> barsChartDtoList;
         try {
-            barsChartDtoList = reportService.getBarsChart(dateFrom, dateTo, operatorId);
+            barsChartDtoList = reportService.getBarsChart(dateFrom, dateTo, operatorId, supervisor.getId());
         }catch (UsernameNotFoundException usernameNotFoundException){
             return ResponseEntity.badRequest().body(String.format("User with id %s not found", operatorId.get()));
         }catch (RuntimeException rex){

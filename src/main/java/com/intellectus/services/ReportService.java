@@ -71,13 +71,13 @@ public class ReportService {
                 .build();
     }
 
-    public List<BarsChartDto> getBarsChart(LocalDate dateFrom, LocalDate dateTo, Optional<Long> operatorId){
+    public List<BarsChartDto> getBarsChart(LocalDate dateFrom, LocalDate dateTo, Optional<Long> operatorId, Long supervisorId){
         Optional<User> user = Optional.empty();
         if (operatorId.isPresent()){
             user = Optional.of(userService.findById(operatorId.get()));
             if(!user.get().getRole().getCode().equals(Role.ROLE_OPERATOR.role())) throw new RuntimeException("The specified user id must correspond to a supervisor");
         }
-        return statService.getStatsBetween(user, dateFrom, dateTo);
+        return statService.getStatsBetween(user, dateFrom, dateTo, supervisorId);
     }
 
     public List<BarsChartDto> getBarsChartByOperators(LocalDate date, Long supervisorId) {

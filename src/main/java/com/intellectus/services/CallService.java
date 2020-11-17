@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class CallService {
     }
 
     public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
-        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetween(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNull(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
         List<CallInfoDto> dtos = calls
                 .stream()
                 .map(Call::toDto)
@@ -128,8 +129,8 @@ public class CallService {
                    .consultantStats(consultantStat.toDto())
                    .operatorStats(operatorStat.toDto())
                    .emotion(call.getEmotion())
-                   .startTime(call.getStartTime())
-                   .endTime(call.getEndTime())
+                   .startTime(call.getStartTime().minusHours(3))
+                   .endTime(call.getEndTime().minusHours(3))
                    .weather(weather)
                    .shift(call.getUser().getShift())
                    .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))

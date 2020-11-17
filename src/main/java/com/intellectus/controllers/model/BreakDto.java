@@ -17,7 +17,7 @@ public class BreakDto  {
     public BreakDto(Call call, LocalDateTime created, Integer duration, Boolean givenBySupervisor)
     {
         this.call = call;
-        this.created = created;
+        this.created = created.minusHours(3);
         this.duration = duration;
         this.givenBySupervisor = givenBySupervisor;
     }
