@@ -13,12 +13,14 @@ public class BreakDto  {
     private LocalDateTime created;
     private Integer duration;
     private Boolean givenBySupervisor;
+    public LocalDateTime updated;
 
-    public BreakDto(Call call, LocalDateTime created, Integer duration, Boolean givenBySupervisor)
+    public BreakDto(Call call, LocalDateTime created, Integer duration, Boolean givenBySupervisor, LocalDateTime updated)
     {
         this.call = call;
         this.created = created.minusHours(3);
         this.duration = duration;
         this.givenBySupervisor = givenBySupervisor;
+        this.updated = updated.minusHours(3);
     }
 }

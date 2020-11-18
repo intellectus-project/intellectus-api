@@ -44,7 +44,7 @@ public class BreakService {
         List<Break> breaks = breakRepository.findAllByUserBetweenDate(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX), user.getId());
         List<BreakDto> dtos = new ArrayList<>();
         breaks.forEach(b -> {
-            dtos.add(new BreakDto(b.getCall(), b.getCreated(), b.getMinutesDuration(), b.isGivenBySupervisor()));
+            dtos.add(new BreakDto(b.getCall(), b.getCreated(), b.getMinutesDuration(), b.isGivenBySupervisor(), b.getUpdated()));
         });
         return dtos;
     }

@@ -99,7 +99,7 @@ public class CallService {
     }
 
     public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
-        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNull(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
         List<CallInfoDto> dtos = calls
                 .stream()
                 .map(Call::toDto)
@@ -145,7 +145,7 @@ public class CallService {
     }
 
     public List<CallInfoDto> fetchByDateAndOperator(LocalDate date, Long id){
-        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDay(id, date);
+        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(id, date);
         return calls
                 .stream()
                 .map(Call::toDto)
