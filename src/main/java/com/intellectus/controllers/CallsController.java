@@ -70,9 +70,10 @@ public class CallsController {
     @GetMapping
     public ResponseEntity<?> fetch(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+                                   @RequestParam Optional<Long> operatorId,
                                    @AuthenticationPrincipal UserPrincipal principal) {
         try {
-            return ResponseEntity.ok().body(callService.fetchByDateAndSupervisor(dateFrom, dateTo, principal.getId()));
+            return ResponseEntity.ok().body(callService.fetchByDateAndSupervisor(dateFrom, dateTo, principal.getId(), operatorId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

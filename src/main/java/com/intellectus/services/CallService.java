@@ -98,8 +98,8 @@ public class CallService {
         return callRepository.findActualByOperator(operator.getId());
     }
 
-    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
-        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
+        List<Call> calls = callsBySupervisor(dateFrom, dateTo, supervisorId, operatorId);
         List<CallInfoDto> dtos = calls
                 .stream()
                 .map(Call::toDto)
@@ -109,6 +109,18 @@ public class CallService {
             callInfoDto.setWeather(weatherService.getWeatherAt(callInfoDto.getStartTime()));
         });
         return dtos;
+    }
+
+    public List<Call> callsBySupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
+        if (operatorId.isPresent())
+            return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX),
+                operatorId);
+        return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX));
+
     }
 
     public List<Call> fetchByDay(LocalDate date) {
