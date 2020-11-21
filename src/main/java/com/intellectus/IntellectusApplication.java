@@ -1,5 +1,6 @@
 package com.intellectus;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -11,6 +12,9 @@ import java.util.TimeZone;
 @EnableScheduling
 public class IntellectusApplication {
 
+	@Value("${timezone}")
+	private String TIMEZONE;
+
 	public static void main(String[] args) {
 		SpringApplication.run(IntellectusApplication.class, args);
 	}
@@ -18,6 +22,6 @@ public class IntellectusApplication {
 	@PostConstruct
 	public void init(){
 		// Setting Spring Boot SetTimeZone
-		TimeZone.setDefault(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
+		TimeZone.setDefault(TimeZone.getTimeZone(TIMEZONE));
 	}
 }

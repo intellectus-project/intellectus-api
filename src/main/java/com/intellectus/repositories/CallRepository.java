@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CallRepository extends CrudRepository<Call, Long> {
@@ -26,9 +27,11 @@ public interface CallRepository extends CrudRepository<Call, Long> {
             nativeQuery = true)
     Call findActualByOperator(@Param("id") Long id);
 
-    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetween(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
+    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
 
-    List<Call> findAllByUser_IdAndOccurrenceDay(Long operatorId, LocalDate date);
+    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdOrderByStartTimeDesc(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo, Optional<Long> operatorId);
+
+    List<Call> findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(Long operatorId, LocalDate date);
 
     List<Call> findAllByStartTimeBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
 

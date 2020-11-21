@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -97,8 +98,8 @@ public class CallService {
         return callRepository.findActualByOperator(operator.getId());
     }
 
-    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
-        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetween(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
+        List<Call> calls = callsBySupervisor(dateFrom, dateTo, supervisorId, operatorId);
         List<CallInfoDto> dtos = calls
                 .stream()
                 .map(Call::toDto)
@@ -108,6 +109,18 @@ public class CallService {
             callInfoDto.setWeather(weatherService.getWeatherAt(callInfoDto.getStartTime()));
         });
         return dtos;
+    }
+
+    public List<Call> callsBySupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
+        if (operatorId.isPresent())
+            return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX),
+                operatorId);
+        return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX));
+
     }
 
     public List<Call> fetchByDay(LocalDate date) {
@@ -128,8 +141,8 @@ public class CallService {
                    .consultantStats(consultantStat.toDto())
                    .operatorStats(operatorStat.toDto())
                    .emotion(call.getEmotion())
-                   .startTime(call.getStartTime())
-                   .endTime(call.getEndTime())
+                   .startTime(call.getStartTime().minusHours(3))
+                   .endTime(call.getEndTime().minusHours(3))
                    .weather(weather)
                    .shift(call.getUser().getShift())
                    .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))
@@ -144,7 +157,7 @@ public class CallService {
     }
 
     public List<CallInfoDto> fetchByDateAndOperator(LocalDate date, Long id){
-        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDay(id, date);
+        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(id, date);
         return calls
                 .stream()
                 .map(Call::toDto)

@@ -29,12 +29,15 @@ public interface StatRepository extends CrudRepository<Stat, Long> {
             " to_char(DATE_TRUNC(:dateGroup, c.occurrence_day), 'YYYY/MM/DD') occurrenceDayTrunc " +
             "from stats s " +
             "join calls c ON c.id = s.id_call " +
+            "join users u ON u.id = c.id_user " +
             "where c.start_time >= :dateFrom " +
             "and c.start_time <= :dateTo " +
             "and s.speaker_type = 'SPEAKER_TYPE_CONSULTANT' " +
+            "and u.id_supervisor = :supervisorId " +
             "group by occurrenceDayTrunc " +
             "order by occurrenceDayTrunc ", nativeQuery = true)
-    List<BarsChart> findStatsGroupedByDateBetween(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo, @Param("dateGroup") String dateGroup);
+    List<BarsChart> findStatsGroupedByDateBetween(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo, @Param("dateGroup") String dateGroup,
+                                                  @Param("supervisorId") Long supervisorId);
 
     @Query(value = "select * from stats s " +
             "join calls c ON c.id = id_call " +
