@@ -6,6 +6,7 @@ import com.intellectus.controllers.model.CallResponseDto;
 import com.intellectus.controllers.model.CallResponsePatchDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.security.UserPrincipal;
+import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class CallsController {
             User user = new User(operator.getId());
 
             if (userService.atBreak(user))
-                return ResponseEntity.status(HttpStatus.LOCKED).body("El operador se encuentra en descanso");
+                return ResponseEntity.status(HttpStatus.LOCKED).body(userService.remainingBreakTime(user));
 
             Long id = callService.create(user, call);
             return ResponseEntity.ok().body(new CallResponseDto(id));

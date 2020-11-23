@@ -52,4 +52,6 @@ public interface UserService {
     void registerWebPush(User user, RegisterUserWebPushDto dto);
 
     boolean atBreak(User user);
+
+    long remainingBreakTime(User user);
 }

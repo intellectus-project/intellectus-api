@@ -160,6 +160,7 @@ public class CallService {
         List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(id, date);
         return calls
                 .stream()
+                .filter(c -> c.getStartTime() != null && c.getEndTime() != null)
                 .map(Call::toDto)
                 .collect(Collectors.toList());
     }
