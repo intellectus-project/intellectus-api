@@ -354,8 +354,14 @@ public class UserServiceImpl implements UserService {
         Optional<Break> breakOpt = breakService.findLastByUser(user, true);
         if (breakOpt.isPresent()){
             Break breakObj = breakOpt.get();
-            return breakObj.getUpdated().plusMinutes(breakObj.getMinutesDuration()).isAfter(LocalDateTime.now());
+            return breakService.isActive(breakObj);
         } else return false;
+    }
+
+    public long remainingBreakTime(User user){
+        Optional<Break> breakOpt = breakService.findLastByUser(user, true);
+        long rem = breakOpt.map(br -> breakService.remainingBreakTime(br)).orElse(0l);
+        return rem;
     }
 
     public boolean breakAssignedBySupervisor(User user) {

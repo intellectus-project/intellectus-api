@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +30,17 @@ public class BreakService {
     private SendWebPushNotification sendWebPushNotification;
 
     public void create(Call call, int minutesDuration) {
-        Break breakInstance = new Break(call, minutesDuration);
-        breakRepository.save(breakInstance);
-        User user = call.getUser();
-        sendWebPushNotification.breakTaken(user.getSupervisor(), user.getFullName());
+        Optional<Break> breakOpt = findByCall(call);
+        breakOpt.ifPresentOrElse(breakObj -> {
+            breakObj.setUpdated(LocalDateTime.now());
+            save(breakObj);
+        },
+        () -> {
+            Break breakInstance = new Break(call, minutesDuration);
+            breakRepository.save(breakInstance);
+            User user = call.getUser();
+            sendWebPushNotification.breakTaken(user.getSupervisor(), user.getFullName());
+           });
     }
 
     public void create(Call call, int minutesDuration, boolean givenBySupervisor, boolean active) {
@@ -61,5 +69,15 @@ public class BreakService {
         breakRepository.save(breakObj);
     }
 
+    public boolean isActive(Break breakObj){
+        return breakObj.getUpdated().plusMinutes(breakObj.getMinutesDuration()).isAfter(LocalDateTime.now());
+    }
+
+    public Long remainingBreakTime(Break breakObj){
+        LocalDateTime finishBreakDateTime = breakObj.getUpdated().plusMinutes(breakObj.getMinutesDuration());
+        long remaining = LocalDateTime.now().until(finishBreakDateTime, ChronoUnit.MINUTES);
+        if (remaining < 0) return 0l;
+        return remaining;
+    }
 }
 
