@@ -29,10 +29,17 @@ public class BreakService {
     private SendWebPushNotification sendWebPushNotification;
 
     public void create(Call call, int minutesDuration) {
-        Break breakInstance = new Break(call, minutesDuration);
-        breakRepository.save(breakInstance);
-        User user = call.getUser();
-        sendWebPushNotification.breakTaken(user.getSupervisor(), user.getFullName());
+        Optional<Break> breakOpt = findByCall(call);
+        breakOpt.ifPresentOrElse(breakObj -> {
+            breakObj.setUpdated(LocalDateTime.now());
+            save(breakObj);
+        },
+        () -> {
+            Break breakInstance = new Break(call, minutesDuration);
+            breakRepository.save(breakInstance);
+            User user = call.getUser();
+            sendWebPushNotification.breakTaken(user.getSupervisor(), user.getFullName());
+           });
     }
 
     public void create(Call call, int minutesDuration, boolean givenBySupervisor, boolean active) {
