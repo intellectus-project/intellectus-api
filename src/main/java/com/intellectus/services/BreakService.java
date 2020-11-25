@@ -75,7 +75,7 @@ public class BreakService {
 
     public Long remainingBreakTime(Break breakObj){
         LocalDateTime finishBreakDateTime = breakObj.getUpdated().plusMinutes(breakObj.getMinutesDuration());
-        long remaining = LocalDateTime.now().until(finishBreakDateTime, ChronoUnit.MINUTES);
+        long remaining = LocalDateTime.now().until(finishBreakDateTime, ChronoUnit.SECONDS);
         if (remaining < 0) return 0l;
         return remaining;
     }
