@@ -148,6 +148,7 @@ public class CallService {
                    .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))
                    .breakDurationMinutes(breakOpt.isPresent() ? breakOpt.get().getMinutesDuration() : 0)
                    .breakTaken(breakOpt.isPresent())
+                   .weatherImage(weatherService.getWeatherImage(weather.getDescription(), call.getStartTime().minusHours(3).getHour()).get())
                    .build();
 
     }

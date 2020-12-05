@@ -181,5 +181,9 @@ public class WeatherService {
                 .image(imageName)
                 .build();
     }
+
+    public Optional<WeatherImage> getWeatherImage(String description, int hour){
+        return weatherImageService.findByDescriptionAndHour(description, hour);
+    }
 }
 

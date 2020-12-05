@@ -12,9 +12,6 @@ import java.util.TimeZone;
 @EnableScheduling
 public class IntellectusApplication {
 
-	@Value("${timezone}")
-	private String TIMEZONE;
-
 	public static void main(String[] args) {
 		SpringApplication.run(IntellectusApplication.class, args);
 	}
@@ -22,6 +19,6 @@ public class IntellectusApplication {
 	@PostConstruct
 	public void init(){
 		// Setting Spring Boot SetTimeZone
-		TimeZone.setDefault(TimeZone.getTimeZone(TIMEZONE));
+		// TimeZone.setDefault(TimeZone.getTimeZone(TIMEZONE));
 	}
 }

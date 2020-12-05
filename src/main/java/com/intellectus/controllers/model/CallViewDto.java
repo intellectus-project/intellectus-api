@@ -3,6 +3,7 @@ package com.intellectus.controllers.model;
 import com.intellectus.model.Break;
 import com.intellectus.model.Shift;
 import com.intellectus.model.Weather;
+import com.intellectus.model.WeatherImage;
 import com.intellectus.model.constants.Emotion;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,4 +26,5 @@ public class CallViewDto {
     private ReducedUserInfoDto operator;
     private boolean breakTaken;
     private int breakDurationMinutes;
+    private WeatherImage weatherImage;
 }
