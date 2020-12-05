@@ -19,7 +19,7 @@ public interface BreakRepository extends JpaRepository<Break, Long> {
             "where breaks.id_user = :idUser AND breaks.created >= :dateFrom and breaks.created <= :dateTo " +
             "and active = true",
             nativeQuery = true)
-    List<Break> findAllByUserBetweenDate(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo,
+    List<Break> findAllByUserBetweenDateOrderByIdDesc(@Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo,
                                             @Param("idUser") Long idUser);
 
     Optional<Break> findByCall(Call call);

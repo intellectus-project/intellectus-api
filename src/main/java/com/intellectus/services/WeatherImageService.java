@@ -41,6 +41,12 @@ public class WeatherImageService {
         return img.isPresent() ? img : findByDescription(description);
     }
 
+    public Optional<WeatherImage> findByDescriptionAndHour(String description, int hour){
+        if(hour > 18) hour-= 24;
+        Optional<WeatherImage> img = repository.findByDescriptionAndMinHourLessThanEqualAndMaxHourGreaterThanEqual(description, hour, hour);
+        return img.isPresent() ? img : findByDescription(description);
+    }
+
     public Optional<WeatherImage> findByDescriptionAndTime(String description, int minHour, int maxHour){
         return repository.findByDescriptionAndMinHourAndMaxHour(description, minHour, maxHour);
     }
