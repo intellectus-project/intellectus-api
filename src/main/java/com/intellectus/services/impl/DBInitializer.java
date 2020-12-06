@@ -353,7 +353,7 @@ public class DBInitializer implements CommandLineRunner {
             userResponse.setRole(com.intellectus.model.constants.Role.ROLE_OPERATOR.role());
             userResponse.setName("Ronan");
             userResponse.setLastName("Vinitzca");
-            userResponse.setSupervisorId(userService.findByUsername("supervisorTarde@intellectus.com").get().getId());
+            userResponse.setSupervisorId(userService.findByUsername("supervisor@intellectus.com").get().getId());
             userResponse.setShiftId(shiftRepository.findShiftByName(SHIFT_TARDE).get().getId());
             userService.createOrEdit(userResponse);
         }
@@ -368,7 +368,7 @@ public class DBInitializer implements CommandLineRunner {
             userResponse.setRole(com.intellectus.model.constants.Role.ROLE_OPERATOR.role());
             userResponse.setName("Eric");
             userResponse.setLastName("Stoppel");
-            userResponse.setSupervisorId(userService.findByUsername("supervisorNoche@intellectus.com").get().getId());
+            userResponse.setSupervisorId(userService.findByUsername("supervisor@intellectus.com").get().getId());
             userResponse.setShiftId(shiftRepository.findShiftByName(SHIFT_NOCHE).get().getId());
             userService.createOrEdit(userResponse);
         }
@@ -399,7 +399,7 @@ public class DBInitializer implements CommandLineRunner {
     private void createCall(User user, LocalDateTime date, int i) {
         try {
             LocalDateTime startDate = date.plusHours(i);
-            LocalDateTime endDate = startDate.plusMinutes(DbInitializerUtils.getRandomInt(5, 85));
+            LocalDateTime endDate = startDate.plusMinutes(DbInitializerUtils.getRandomInt(1, 10)).plusSeconds(DbInitializerUtils.getRandomInt(1, 59));
             Long callId = callService.create(user, CallRequestPostDto.builder().startTime(startDate).build());
             List<Double> consultantStats = DbInitializerUtils.randomStats();
             StatDto consultantDto = StatDto.builder()
@@ -427,10 +427,6 @@ public class DBInitializer implements CommandLineRunner {
                     .build();
 
             callService.update(callDto, callId);
-            if (DbInitializerUtils.getRandomInt(1,100) % 10 == 0) {
-                //TODO hacer random la duración del descanso
-                breakService.create(callService.findById(callId).get(), 10, false, true);
-            }
         } catch (Exception e) {
             System.out.println("Error creando call de prueba");
             System.out.println(e.getStackTrace());
