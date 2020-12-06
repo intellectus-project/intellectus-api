@@ -3,13 +3,16 @@ package com.intellectus.controllers;
 import com.intellectus.controllers.model.CallRequestPostDto;
 import com.intellectus.controllers.model.CallRequestPatchDto;
 import com.intellectus.controllers.model.CallResponseDto;
+import com.intellectus.controllers.model.CallResponsePatchDto;
 import com.intellectus.model.configuration.User;
 import com.intellectus.security.UserPrincipal;
+import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,6 +45,10 @@ public class CallsController {
     public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal operator, @RequestBody @Valid CallRequestPostDto call) {
         try {
             User user = new User(operator.getId());
+
+            if (userService.atBreak(user))
+                return ResponseEntity.status(HttpStatus.LOCKED).body(userService.remainingBreakTime(user));
+
             Long id = callService.create(user, call);
             return ResponseEntity.ok().body(new CallResponseDto(id));
 
@@ -52,10 +59,9 @@ public class CallsController {
 
     @PreAuthorize("hasRole('ROLE_OPERATOR')")
     @PatchMapping("/{id}")
-    public ResponseEntity<String> update(@RequestBody @Valid CallRequestPatchDto call, @PathVariable @Min(1) Long id) {
+    public ResponseEntity<?> update(@RequestBody @Valid CallRequestPatchDto call, @PathVariable @Min(1) Long id) {
         try {
-            callService.update(call, id);
-            return ResponseEntity.ok().body("updated");
+            return ResponseEntity.ok().body(callService.update(call, id));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,9 +71,10 @@ public class CallsController {
     @GetMapping
     public ResponseEntity<?> fetch(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
+                                   @RequestParam Optional<Long> operatorId,
                                    @AuthenticationPrincipal UserPrincipal principal) {
         try {
-            return ResponseEntity.ok().body(callService.fetchByDateAndSupervisor(dateFrom, dateTo, principal.getId()));
+            return ResponseEntity.ok().body(callService.fetchByDateAndSupervisor(dateFrom, dateTo, principal.getId(), operatorId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

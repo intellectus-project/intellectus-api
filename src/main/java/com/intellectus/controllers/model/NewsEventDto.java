@@ -7,10 +7,11 @@ import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @Getter
 @Setter
-public class NewsEventDto  {
+public class NewsEventDto{
     private String title;
     private String url;
     private LocalDate created;

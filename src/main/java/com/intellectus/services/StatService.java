@@ -48,7 +48,7 @@ public class StatService {
         return statRepository.findLastByOperator(operator.getId());
     }
 
-    public List<BarsChartDto> getStatsBetween(Optional<User> user, LocalDate dateFrom, LocalDate dateTo){
+    public List<BarsChartDto> getStatsBetween(Optional<User> user, LocalDate dateFrom, LocalDate dateTo, Long supervisorId){
         int daysBetween = (int)ChronoUnit.DAYS.between(dateFrom, dateTo);
         String dateGroup;
         if(daysBetween < 7) {
@@ -61,7 +61,7 @@ public class StatService {
         LocalDateTime df = dateFrom.atStartOfDay();
         LocalDateTime dt = dateTo.atTime(LocalTime.MAX);
         List<StatRepository.BarsChart> barsCharts =  user.isPresent() ? statRepository.findStatsForUserGroupedByDateBetween(user.get().getId(), df, dt, dateGroup)
-                : statRepository.findStatsGroupedByDateBetween(df, dt, dateGroup);
+                : statRepository.findStatsGroupedByDateBetween(df, dt, dateGroup, supervisorId);
         return barsCharts.stream().map(elem ->
                 new BarsChartDto(elem.getSadness(),
                         elem.getHappiness(),

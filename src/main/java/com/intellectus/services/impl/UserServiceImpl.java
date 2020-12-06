@@ -2,16 +2,14 @@ package com.intellectus.services.impl;
 
 import com.intellectus.controllers.model.*;
 import com.intellectus.exceptions.*;
-import com.intellectus.model.Break;
-import com.intellectus.model.Call;
-import com.intellectus.model.Shift;
-import com.intellectus.model.Stat;
+import com.intellectus.model.*;
 import com.intellectus.model.configuration.Menu;
 import com.intellectus.model.configuration.Role;
 import com.intellectus.model.configuration.User;
 import com.intellectus.model.constants.Emotion;
 import com.intellectus.repositories.RoleRepository;
 import com.intellectus.repositories.UserRepository;
+import com.intellectus.repositories.UserWebPushCredentialsRepository;
 import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.ShiftService;
@@ -67,6 +65,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     BreakService breakService;
+
+    @Autowired
+    UserWebPushCredentialsRepository userWebPushCredentialsRepository;
 
     @Override
     public Collection<User> findAll() {
@@ -230,7 +231,7 @@ public class UserServiceImpl implements UserService {
             log.warn("Username already exists");
             return Optional.empty();
         }
-        Optional<Shift> shift = null;
+        Optional<Shift> shift = Optional.empty();
         if(updates.containsKey("shiftId")) {
             shift = shiftService.findById(Long.valueOf(updates.get("shiftId").toString()));
         }
@@ -353,8 +354,14 @@ public class UserServiceImpl implements UserService {
         Optional<Break> breakOpt = breakService.findLastByUser(user, true);
         if (breakOpt.isPresent()){
             Break breakObj = breakOpt.get();
-            return breakObj.getUpdated().plusMinutes(breakObj.getMinutesDuration()).isAfter(LocalDateTime.now());
+            return breakService.isActive(breakObj);
         } else return false;
+    }
+
+    public long remainingBreakTime(User user){
+        Optional<Break> breakOpt = breakService.findLastByUser(user, true);
+        long rem = breakOpt.map(br -> breakService.remainingBreakTime(br)).orElse(0l);
+        return rem;
     }
 
     public boolean breakAssignedBySupervisor(User user) {
@@ -415,5 +422,14 @@ public class UserServiceImpl implements UserService {
             dto.addNeutrality(stat.getNeutrality());
         });
         return dto;
+    }
+
+    public void registerWebPush(User user, RegisterUserWebPushDto dto) {
+        UserWebPushCredentials credentials = new UserWebPushCredentials();
+        credentials.setEndpoint(dto.getEndpoint());
+        credentials.setAuth(dto.getAuth());
+        credentials.setP256dh(dto.getP256dh());
+        credentials.setUser(user);
+        userWebPushCredentialsRepository.save(credentials);
     }
 }

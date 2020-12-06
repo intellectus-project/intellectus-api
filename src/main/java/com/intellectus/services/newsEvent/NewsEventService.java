@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -79,6 +81,14 @@ public class NewsEventService {
     }
 
     public List<NewsEventDto> fetchByDate(LocalDate dateFrom, LocalDate dateTo) {
-        return newsEventRepository.findAllByCreatedBetween(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+        List<NewsEventDto> newsList = newsEventRepository.findAllByCreatedBetween(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+        Collections.sort(newsList, new Comparator<NewsEventDto>() {
+            @Override
+            public int compare(NewsEventDto n1, NewsEventDto n2) {
+                return n2.getCreated().compareTo(n1.getCreated());
+            }
+        });
+        
+        return newsList;
     }
 }

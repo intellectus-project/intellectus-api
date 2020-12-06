@@ -35,7 +35,7 @@ public class Break extends AuditableEntity {
     private boolean givenBySupervisor;
 
     @Column(columnDefinition = "bool default true")
-    private boolean active;
+    private boolean active = true;
 
     public Break() {}
 

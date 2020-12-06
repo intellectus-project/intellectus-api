@@ -11,16 +11,15 @@ import com.intellectus.model.constants.Emotion;
 import com.intellectus.model.constants.SpeakerType;
 import com.intellectus.repositories.CallRepository;
 import com.intellectus.services.weather.WeatherService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import com.intellectus.services.impl.UserServiceImpl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +48,7 @@ public class CallService {
         return call.getId();
     }
 
-    public void update(CallRequestPatchDto callDto, Long id) throws Exception {
+    public CallResponsePatchDto update(CallRequestPatchDto callDto, Long id) throws Exception {
         Optional<Call> optionalCall = callRepository.findById((id));
         if (optionalCall.isEmpty())
             throw new Exception("Call does not exist");
@@ -59,10 +58,15 @@ public class CallService {
         call.setEmotion(Emotion.valueOf(callDto.getEmotion()).get());
         callRepository.save(call);
 
+        AtomicReference<Boolean> breakAssigned = new AtomicReference<>(false);
+        AtomicReference<Integer> minutesDuration = new AtomicReference<>();
+
         Optional<Break> breakOpt = breakService.findByCall(call);
         breakOpt.ifPresent(breakObj -> {
             breakObj.setActive(true);
             breakService.save(breakObj);
+            breakAssigned.set(true);
+            minutesDuration.set(breakObj.getMinutesDuration());
         });
 
         StatDto consultantDto = callDto.getConsultantStats();
@@ -84,14 +88,18 @@ public class CallService {
                 call,
                 SpeakerType.SPEAKER_TYPE_OPERATOR);
         statService.create(operatorStats);
+        return CallResponsePatchDto.builder()
+                .breakAssigned(breakAssigned.get())
+                .minutesDuration(minutesDuration.get())
+                .build();
     }
 
     public Call actualOperatorCall(User operator) {
         return callRepository.findActualByOperator(operator.getId());
     }
 
-    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId) {
-        List<Call> calls = callRepository.findAllByUser_Supervisor_IdAndStartTimeBetween(supervisorId, dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
+    public Collection<CallInfoDto> fetchByDateAndSupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
+        List<Call> calls = callsBySupervisor(dateFrom, dateTo, supervisorId, operatorId);
         List<CallInfoDto> dtos = calls
                 .stream()
                 .map(Call::toDto)
@@ -101,6 +109,18 @@ public class CallService {
             callInfoDto.setWeather(weatherService.getWeatherAt(callInfoDto.getStartTime()));
         });
         return dtos;
+    }
+
+    public List<Call> callsBySupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
+        if (operatorId.isPresent())
+            return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX),
+                operatorId);
+        return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay(),
+                dateTo.atTime(LocalTime.MAX));
+
     }
 
     public List<Call> fetchByDay(LocalDate date) {
@@ -121,13 +141,14 @@ public class CallService {
                    .consultantStats(consultantStat.toDto())
                    .operatorStats(operatorStat.toDto())
                    .emotion(call.getEmotion())
-                   .startTime(call.getStartTime())
-                   .endTime(call.getEndTime())
+                   .startTime(call.getStartTime().minusHours(3))
+                   .endTime(call.getEndTime().minusHours(3))
                    .weather(weather)
                    .shift(call.getUser().getShift())
                    .operator(new ReducedUserInfoDto(call.getUser().getId(), call.getUser().getName()))
                    .breakDurationMinutes(breakOpt.isPresent() ? breakOpt.get().getMinutesDuration() : 0)
                    .breakTaken(breakOpt.isPresent())
+                   .weatherImage(weatherService.getWeatherImage(weather.getDescription(), call.getStartTime().minusHours(3).getHour()).get())
                    .build();
 
     }
@@ -137,9 +158,10 @@ public class CallService {
     }
 
     public List<CallInfoDto> fetchByDateAndOperator(LocalDate date, Long id){
-        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDay(id, date);
+        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(id, date);
         return calls
                 .stream()
+                .filter(c -> c.getStartTime() != null && c.getEndTime() != null)
                 .map(Call::toDto)
                 .collect(Collectors.toList());
     }

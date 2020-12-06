@@ -48,4 +48,10 @@ public interface UserService {
     EmotionStatusDto getOperatorEmotionStatus(User operator);
 
     EmotionTablesDto getEmotionTables(User operator, LocalDate date);
+
+    void registerWebPush(User user, RegisterUserWebPushDto dto);
+
+    boolean atBreak(User user);
+
+    long remainingBreakTime(User user);
 }

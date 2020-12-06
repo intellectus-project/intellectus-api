@@ -51,8 +51,8 @@ public class Call extends AuditableEntity{
     public CallInfoDto toDto(){
         return CallInfoDto.builder()
                 .shift(this.user.getShift())
-                .startTime(this.startTime)
-                .endTime(this.endTime)
+                .startTime(this.startTime != null ? this.startTime.minusHours(3) : null)
+                .endTime(this.endTime != null ? this.endTime.minusHours(3) : null)
                 .operator(new ReducedUserInfoDto(this.user.getId(), this.user.getName()))
                 .id(this.getId())
                 .build();
