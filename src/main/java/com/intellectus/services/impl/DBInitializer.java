@@ -20,6 +20,7 @@ import com.intellectus.services.BreakService;
 import com.intellectus.services.CallService;
 import com.intellectus.services.StatService;
 import com.intellectus.services.WeatherImageService;
+import com.intellectus.services.filters.FilterUserDto;
 import com.intellectus.services.newsEvent.NewsEventService;
 import com.intellectus.services.weather.WeatherService;
 import com.intellectus.utils.DbInitializerUtils;
@@ -36,10 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -102,7 +100,7 @@ public class DBInitializer implements CommandLineRunner {
         weatherService.fetchFiveDaysHistorical();
         weatherImages();
         shifts();
-        users();
+        //users();
         calls();
 
     }
@@ -376,18 +374,15 @@ public class DBInitializer implements CommandLineRunner {
 
     private void calls() {
         LocalDateTime date = LocalDateTime.now().minusDays(2);
-        List<User> users = new ArrayList<>();
-        users.add(userService.findByUsername("lucas@intellectus.com").get());
-        users.add(userService.findByUsername("ronan@intellectus.com").get());
-        users.add(userService.findByUsername("eric@intellectus.com").get());
+        Collection<User> users = userService.findAll(FilterUserDto.builder().role(Optional.of(roleRepository.findByCode("ROLE_OPERATOR").getDescription())).build());
+        ArrayList<User> userArrayList = new ArrayList<>(users);
 
-        createCalls(users, date);
-        createCalls(users, date.plusDays(1));
-        createCalls(users, date.plusDays(2));
+        createCalls(userArrayList, date);
+        createCalls(userArrayList, date.plusDays(1));
+        createCalls(userArrayList, date.plusDays(2));
     }
 
     private void createCalls(List<User> users, LocalDateTime date){
-        if (callService.fetchByDay(date.toLocalDate()).size() > 3) return;
         for (int i = 0; i < 5; i++) {
             int finalI = i;
             users.forEach(user -> {
