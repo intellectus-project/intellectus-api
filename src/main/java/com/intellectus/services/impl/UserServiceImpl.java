@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService {
             log.warn("Username already exists");
             return Optional.empty();
         }
-        Optional<Shift> shift = null;
+        Optional<Shift> shift = Optional.empty();
         if(updates.containsKey("shiftId")) {
             shift = shiftService.findById(Long.valueOf(updates.get("shiftId").toString()));
         }

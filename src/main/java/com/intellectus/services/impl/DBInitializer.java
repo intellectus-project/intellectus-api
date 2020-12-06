@@ -128,7 +128,7 @@ public class DBInitializer implements CommandLineRunner {
                     .icon("user")
                     .order(3)
                     .build());
-            Menu mLogout = menuRepository.save(Menu.builder().name("Logout")
+            Menu mLogout = menuRepository.save(Menu.builder().name("Cerrar sesión")
                     .code("LOGOUT")
                     .icon("logout")
                     .parent(mMainUser)
