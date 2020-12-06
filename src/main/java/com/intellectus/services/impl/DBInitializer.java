@@ -166,20 +166,21 @@ public class DBInitializer implements CommandLineRunner {
 
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
-                    .description("Administrator")
+                    .description("Administrador")
                     .menus(Sets.newHashSet(mMainUser, mManageUsers, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
+            
             Role roleOperator = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
-                    .description("Viewer")
+                    .description("Operador")
                     .menus(Sets.newHashSet(mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
 
             Role roleSupervisor = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role())
-                    .description("Analyst")
+                    .description("Supervisor")
                     .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
