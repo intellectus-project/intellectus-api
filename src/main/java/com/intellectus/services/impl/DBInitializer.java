@@ -166,20 +166,21 @@ public class DBInitializer implements CommandLineRunner {
 
             Role roleAdmin = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_ADMIN.role())
-                    .description("Administrator")
+                    .description("Administrador")
                     .menus(Sets.newHashSet(mMainUser, mManageUsers, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
+            
             Role roleOperator = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
-                    .description("Viewer")
+                    .description("Operador")
                     .menus(Sets.newHashSet(mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
 
             Role roleSupervisor = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_SUPERVISOR.role())
-                    .description("Analyst")
+                    .description("Supervisor")
                     .menus(Sets.newHashSet(mViewDashboard, mOperators, mMainUser, mLogout))
                     .permissions(Sets.newHashSet(pModifyUser, pViewProfile))
                     .build());
@@ -393,7 +394,7 @@ public class DBInitializer implements CommandLineRunner {
 
     private void createCall(User user, LocalDateTime date, int i) {
         try {
-            LocalDateTime startDate = date.plusHours(i);
+            LocalDateTime startDate = date.minusHours(i);
             LocalDateTime endDate = startDate.plusMinutes(DbInitializerUtils.getRandomInt(1, 10)).plusSeconds(DbInitializerUtils.getRandomInt(1, 59));
             Long callId = callService.create(user, CallRequestPostDto.builder().startTime(startDate).build());
             List<Double> consultantStats = DbInitializerUtils.randomStats();
