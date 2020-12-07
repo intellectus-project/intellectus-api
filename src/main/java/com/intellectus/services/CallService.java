@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -113,14 +114,14 @@ public class CallService {
 
     public List<Call> callsBySupervisor(LocalDate dateFrom, LocalDate dateTo, Long supervisorId, Optional<Long> operatorId) {
         if (operatorId.isPresent())
-            return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdOrderByStartTimeDesc(supervisorId,
-                dateFrom.atStartOfDay(),
-                dateTo.atTime(LocalTime.MAX),
-                operatorId);
-        return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(supervisorId,
-                dateFrom.atStartOfDay(),
-                dateTo.atTime(LocalTime.MAX));
-
+            return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdAndUser_ActiveOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay().plusHours(3),
+                dateTo.atTime(LocalTime.MAX).plusHours(3),
+                operatorId,
+          true);
+        return callRepository.findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUser_ActiveIsTrueOrderByStartTimeDesc(supervisorId,
+                dateFrom.atStartOfDay().plusHours(3),
+                dateTo.atTime(LocalTime.MAX).plusHours(3));
     }
 
     public List<Call> fetchByDay(LocalDate date) {
@@ -158,7 +159,9 @@ public class CallService {
     }
 
     public List<CallInfoDto> fetchByDateAndOperator(LocalDate date, Long id){
-        List<Call> calls = callRepository.findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(id, date);
+        LocalDateTime start = date.atStartOfDay().plusHours(3);
+        LocalDateTime end = date.atTime(LocalTime.MAX).plusHours(3);
+        List<Call> calls = callRepository.findAllByUser_IdAndStartTimeBetweenOrderByStartTimeDesc(id, start, end);
         return calls
                 .stream()
                 .filter(c -> c.getStartTime() != null && c.getEndTime() != null)
