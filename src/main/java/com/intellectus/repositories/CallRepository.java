@@ -27,11 +27,11 @@ public interface CallRepository extends CrudRepository<Call, Long> {
             nativeQuery = true)
     Call findActualByOperator(@Param("id") Long id);
 
-    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullOrderByStartTimeDesc(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
+    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUser_ActiveIsTrueOrderByStartTimeDesc(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo);
 
-    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdOrderByStartTimeDesc(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo, Optional<Long> operatorId);
+    List<Call> findAllByUser_Supervisor_IdAndStartTimeBetweenAndEndTimeIsNotNullAndUserIdAndUser_ActiveOrderByStartTimeDesc(Long supervisorId, LocalDateTime dateFrom, LocalDateTime dateTo, Optional<Long> operatorId, Boolean active);
 
-    List<Call> findAllByUser_IdAndOccurrenceDayOrderByStartTimeDesc(Long operatorId, LocalDate date);
+    List<Call> findAllByUser_IdAndStartTimeBetweenOrderByStartTimeDesc(Long operatorId, LocalDateTime start, LocalDateTime end);
 
     List<Call> findAllByStartTimeBetween(LocalDateTime dateFrom, LocalDateTime dateTo);
 

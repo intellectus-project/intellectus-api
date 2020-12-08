@@ -393,7 +393,7 @@ public class UserServiceImpl implements UserService {
     public EmotionStatusDto getOperatorEmotionStatus(User operator) {
         Optional<Stat> opStat = statService.lastOperatorStat(operator);
         if(!opStat.isPresent()) {
-            return EmotionStatusDto.builder().build();
+            return EmotionStatusDto.builder().name(operator.getName()).build();
         }
         Stat stat = opStat.get();
         StatDto statDto = StatDto.builder()
