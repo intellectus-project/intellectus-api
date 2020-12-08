@@ -374,6 +374,8 @@ public class DBInitializer implements CommandLineRunner {
     }
 
     private void calls() {
+        if(callService.fetchByDay(LocalDate.now()).size() > 30)
+            return;
         LocalDateTime date = LocalDateTime.now().minusDays(2);
         Collection<User> users = userService.findAll(FilterUserDto.builder().role(Optional.of(roleRepository.findByCode("ROLE_OPERATOR").getDescription())).build());
         ArrayList<User> userArrayList = new ArrayList<>(users);
