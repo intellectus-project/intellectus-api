@@ -170,7 +170,7 @@ public class DBInitializer implements CommandLineRunner {
                     .menus(Sets.newHashSet(mMainUser, mManageUsers, mLogout))
                     .permissions(Sets.newHashSet(pCreateUser, pModifyUser, pViewListUser, pViewProfile))
                     .build());
-            
+
             Role roleOperator = roleRepository.save(Role.builder()
                     .code(com.intellectus.model.constants.Role.ROLE_OPERATOR.role())
                     .description("Operador")

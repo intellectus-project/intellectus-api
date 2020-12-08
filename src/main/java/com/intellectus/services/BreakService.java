@@ -14,8 +14,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BreakService {
@@ -54,7 +57,7 @@ public class BreakService {
         breaks.forEach(b -> {
             dtos.add(new BreakDto(b.getCall(), b.getCreated(), b.getMinutesDuration(), b.isGivenBySupervisor(), b.getUpdated()));
         });
-        return dtos;
+        return dtos.stream().sorted(Comparator.comparing(BreakDto::getCreated).reversed()).collect(Collectors.toList());
     }
 
     public Optional<Break> findById(Long id) { return breakRepository.findById(id); }
